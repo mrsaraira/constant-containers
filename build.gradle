@@ -1,0 +1,30 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+}
+
+group = 'com.mrsaraira.constants'
+version = '1.0-SNAPSHOT'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly "org.projectlombok:lombok:$LIB_LOMBOK_VERSION"
+    annotationProcessor "org.projectlombok:lombok:$LIB_LOMBOK_VERSION"
+    implementation "org.slf4j:slf4j-api:$LIB_SLF4J_API"
+
+    testImplementation platform("org.junit:junit-bom:$LIB_JUNIT_BOM")
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+test {
+    useJUnitPlatform()
+}
