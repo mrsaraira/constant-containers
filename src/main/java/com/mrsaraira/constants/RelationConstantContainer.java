@@ -4,9 +4,9 @@ import java.util.Collection;
 
 public interface RelationConstantContainer<L, R> extends ConstantContainer<L> {
 
-    Collection<IConstant<R>> getRelations(L key);
+    Collection<Constant<R>> getRelations(L key);
 
-    Collection<IRelationConstant<L, R>> getRelations();
+    Collection<RelationConstant<L, R>> getRelations();
 
     @SuppressWarnings("unchecked")
     private Class<RelationConstantContainer<L, R>> getType() {

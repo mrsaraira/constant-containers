@@ -1,15 +1,8 @@
 package com.mrsaraira.constants;
 
-import lombok.Value;
 
-@Value
-class Constant<T> implements IConstant<T> {
+public interface Constant<T> {
 
-    T value;
-
-    @Override
-    public T getValue() {
-        return value;
-    }
+    T getValue();
 
 }

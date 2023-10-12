@@ -1,7 +1,7 @@
 package com.mrsaraira.constants.containers;
 
 import com.mrsaraira.constants.ConstantContainer;
-import com.mrsaraira.constants.IConstant;
+import com.mrsaraira.constants.Constant;
 
 import java.util.Collection;
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 public abstract class AbstractConstantContainer<T> implements ConstantContainer<T> {
 
-    protected final Collection<IConstant<T>> constants;
+    protected final Collection<Constant<T>> constants;
 
     protected AbstractConstantContainer() {
         this.constants = initialConstants()
@@ -19,15 +19,15 @@ public abstract class AbstractConstantContainer<T> implements ConstantContainer<
                 .collect(Collectors.toUnmodifiableSet());
     }
 
-    protected abstract List<IConstant<T>> initialConstants();
+    protected abstract List<Constant<T>> initialConstants();
 
     @Override
-    public final Optional<IConstant<T>> getKey(T value) {
+    public final Optional<Constant<T>> getKey(T value) {
         return constants.stream().filter(constant -> Objects.equals(constant.getValue(), value)).findFirst();
     }
 
     @Override
-    public final Collection<IConstant<T>> getKeys() {
+    public final Collection<Constant<T>> getKeys() {
         return constants;
     }
 
