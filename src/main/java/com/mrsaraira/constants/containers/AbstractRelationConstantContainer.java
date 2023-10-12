@@ -1,20 +1,28 @@
 package com.mrsaraira.constants.containers;
 
-import com.mrsaraira.constants.Constants;
 import com.mrsaraira.constants.Constant;
+import com.mrsaraira.constants.Constants;
 import com.mrsaraira.constants.RelationConstant;
 import com.mrsaraira.constants.RelationConstantContainer;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
-public abstract class AbstractRelationConstantContainer<T, R> implements RelationConstantContainer<T, R> {
+/**
+ * Implementation of {@link RelationConstantContainer} that stores constants in {@link java.util.HashMap}.
+ * The keys relations might have same values for different keys.
+ * <p>
+ * {@inheritDoc}
+ *
+ * @param <L> constant keys values type
+ * @param <R> relation constants values type
+ * @author Takhsin Saraira
+ * @see RelationConstantContainer
+ * @see RelationConstant
+ */
+public abstract class AbstractRelationConstantContainer<L, R> implements RelationConstantContainer<L, R> {
 
-    protected final Map<Constant<T>, Collection<Constant<R>>> constantsMap;
+    protected final Map<Constant<L>, Collection<Constant<R>>> constantsMap;
 
     protected AbstractRelationConstantContainer() {
         this.constantsMap = initialConstants()
@@ -22,36 +30,41 @@ public abstract class AbstractRelationConstantContainer<T, R> implements Relatio
                 .collect(Collectors.toUnmodifiableMap(RelationConstant::getKey, RelationConstant::getRelations));
     }
 
-    protected abstract List<RelationConstant<T, R>> initialConstants();
+    /**
+     * Defines the container initial relation constants.
+     *
+     * @return list of the container relation constants
+     */
+    protected abstract List<RelationConstant<L, R>> initialConstants();
 
     @Override
-    public final Optional<Constant<T>> getKey(T value) {
+    public final Optional<Constant<L>> getKey(L value) {
         return getKeys().stream().filter(constant -> Objects.equals(constant.getValue(), value)).findFirst();
     }
 
     @Override
-    public final Collection<Constant<T>> getKeys() {
+    public final Collection<Constant<L>> getKeys() {
         return constantsMap.keySet();
     }
 
     @Override
-    public final Collection<Constant<R>> getRelations(T key) {
-        return constantsMap.get(Constants.of(key));
+    public final Collection<Constant<R>> getRelations(L keyValue) {
+        return constantsMap.get(Constants.of(keyValue));
     }
 
     @Override
-    public final Collection<T> getKeyValues() {
+    public final Collection<RelationConstant<L, R>> getRelations() {
+        return initialConstants();
+    }
+
+    @Override
+    public final Collection<L> getKeyValues() {
         return RelationConstantContainer.super.getKeyValues();
     }
 
     @Override
     public final Collection<Collection<R>> getRelationValues() {
         return RelationConstantContainer.super.getRelationValues();
-    }
-
-    @Override
-    public final Collection<RelationConstant<T, R>> getRelations() {
-        return initialConstants();
     }
 
 }

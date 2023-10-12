@@ -6,20 +6,22 @@ import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 
+/**
+ * Utility class to operation on constants and containers.
+ *
+ * @author Takhsin Saraira
+ * @see Constant
+ * @see RelationConstant
+ * @see RelationConstant
+ * @see RelationConstantContainer
+ */
 @Slf4j
 @UtilityClass
 public final class Constants {
