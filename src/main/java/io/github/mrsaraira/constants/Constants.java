@@ -1,7 +1,7 @@
-package com.mrsaraira.constants;
+package io.github.mrsaraira.constants;
 
-import com.mrsaraira.constants.containers.AbstractConstantContainer;
-import com.mrsaraira.constants.containers.AbstractRelationConstantContainer;
+import io.github.mrsaraira.constants.containers.AbstractConstantContainer;
+import io.github.mrsaraira.constants.containers.AbstractRelationConstantContainer;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
@@ -94,7 +94,7 @@ public final class Constants {
     @SafeVarargs
     @SuppressWarnings("unchecked")
     public static <L, R, C extends RelationConstant<L, R>> RelationConstant<L, R>[] concat(@NonNull C... relationConstants) {
-        return Stream.of(relationConstants).map(c -> Constants.of(c.getKey(), c.getRelations())).toArray(RelationConstant[]::new);
+        return Stream.of(relationConstants).map(c -> of(c.getKey(), c.getRelations())).toArray(RelationConstant[]::new);
     }
 
     @SafeVarargs

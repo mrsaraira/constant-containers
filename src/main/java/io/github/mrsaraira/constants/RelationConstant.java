@@ -1,4 +1,4 @@
-package com.mrsaraira.constants;
+package io.github.mrsaraira.constants;
 
 import java.util.Collection;
 

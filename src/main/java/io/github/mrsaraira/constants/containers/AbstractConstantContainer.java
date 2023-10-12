@@ -1,7 +1,7 @@
-package com.mrsaraira.constants.containers;
+package io.github.mrsaraira.constants.containers;
 
-import com.mrsaraira.constants.Constant;
-import com.mrsaraira.constants.ConstantContainer;
+import io.github.mrsaraira.constants.Constant;
+import io.github.mrsaraira.constants.ConstantContainer;
 
 import java.util.Collection;
 import java.util.List;

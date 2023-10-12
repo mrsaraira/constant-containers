@@ -1,4 +1,6 @@
-package com.mrsaraira.constants;
+package io.github.mrsaraira.constants;
+
+import io.github.mrsaraira.constants.containers.AbstractRelationConstantContainer;
 
 import java.util.Collection;
 
@@ -10,7 +12,7 @@ import java.util.Collection;
  * @param <L> constant keys values type
  * @param <R> relation constants value type
  * @author Takhsin Saraira
- * @see com.mrsaraira.constants.containers.AbstractRelationConstantContainer
+ * @see AbstractRelationConstantContainer
  * @see RelationConstant
  * @see RelationConstantImpl
  * @see Constants

@@ -1,9 +1,9 @@
-package com.mrsaraira.constants.containers;
+package io.github.mrsaraira.constants.containers;
 
-import com.mrsaraira.constants.Constant;
-import com.mrsaraira.constants.Constants;
-import com.mrsaraira.constants.RelationConstant;
-import com.mrsaraira.constants.RelationConstantContainer;
+import io.github.mrsaraira.constants.Constant;
+import io.github.mrsaraira.constants.Constants;
+import io.github.mrsaraira.constants.RelationConstant;
+import io.github.mrsaraira.constants.RelationConstantContainer;
 
 import java.util.*;
 import java.util.stream.Collectors;

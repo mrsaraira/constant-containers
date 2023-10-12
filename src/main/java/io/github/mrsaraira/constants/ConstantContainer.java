@@ -1,4 +1,6 @@
-package com.mrsaraira.constants;
+package io.github.mrsaraira.constants;
+
+import io.github.mrsaraira.constants.containers.AbstractConstantContainer;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -9,7 +11,7 @@ import java.util.Optional;
  *
  * @param <T> constants key type
  * @author Takhsin Saraira
- * @see com.mrsaraira.constants.containers.AbstractConstantContainer
+ * @see AbstractConstantContainer
  * @see Constant
  * @see ConstantImpl
  * @see Constants
