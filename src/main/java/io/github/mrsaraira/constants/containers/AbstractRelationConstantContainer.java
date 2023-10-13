@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 /**
  * Implementation of {@link RelationConstantContainer} that stores constants in {@link java.util.HashMap}.
  * The keys relations might have same values for different keys.
+ * <br><b>Requirement:</b> The inheritor class must have no-args constructor!
  * <p>
  * {@inheritDoc}
  *

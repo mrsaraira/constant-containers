@@ -4,8 +4,8 @@ import io.github.mrsaraira.constants.containers.AbstractConstantContainer;
 import io.github.mrsaraira.constants.containers.AbstractRelationConstantContainer;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
-import lombok.extern.slf4j.Slf4j;
 
+import java.lang.reflect.Constructor;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -22,7 +22,6 @@ import java.util.stream.Stream;
  * @see RelationConstant
  * @see RelationConstantContainer
  */
-@Slf4j
 @UtilityClass
 public final class Constants {
 
@@ -219,10 +218,11 @@ public final class Constants {
 
         private static <T extends ConstantContainer<?>> T createInstance(@NonNull Class<T> type) {
             try {
-                return type.getConstructor().newInstance();
+                var constructor = type.getConstructor();
+                constructor.setAccessible(true);
+                return constructor.newInstance();
             } catch (Exception e) {
-                log.error("Cannot create constant container: {} due to: {}", type, e.getMessage(), e);
-                return null;
+                throw new IllegalStateException(String.format("Cannot instantiate constant class of type: %s", type), e);
             }
         }
 
