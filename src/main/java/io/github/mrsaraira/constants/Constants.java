@@ -218,7 +218,7 @@ public final class Constants {
 
         private static <T extends ConstantContainer<?>> T createInstance(@NonNull Class<T> type) {
             try {
-                var constructor = type.getConstructor();
+                var constructor = type.getDeclaredConstructor();
                 constructor.setAccessible(true);
                 return constructor.newInstance();
             } catch (Exception e) {
