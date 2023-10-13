@@ -92,7 +92,7 @@ public class DemoTest {
         var constant = keyConstant.get();
         assertEquals(constant.getValue(), "One");
         assertEquals(1, relations.size());
-        assertEquals(1, relations.get(0).getValue());
+        assertEquals(1, relations.iterator().next().getValue());
 
         // Same as Enum.values();
         var allKeyValues = Constants.getInstance(container.getClass()).getKeyValues();
