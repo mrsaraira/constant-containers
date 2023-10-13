@@ -28,6 +28,7 @@ public class DemoTest {
 
     private static class DemoContainerWithConstants extends AbstractConstantContainer<String> {
 
+// the constant refs can be public final and referenced by Constants.getInstance(DemoContainerWithConstants.class).ONE 
         public static final Constant<String> ONE = Constants.of("One");
         public static final Constant<String> TWO = Constants.of("Two");
         public static final Constant<String> THREE = Constants.of("Three");
@@ -91,6 +92,7 @@ public class DemoTest {
         var constant = keyConstant.get();
         assertEquals(constant.getValue(), "One");
         assertEquals(1, relations.size());
+        assertEquals(1, relations.get(0).getValue());
 
         // Same as Enum.values();
         var allKeyValues = Constants.getInstance(container.getClass()).getKeyValues();
@@ -119,12 +121,11 @@ public class DemoTest {
         var anyValueInTheContainerKeysByClass = Constants.anyValue("Three", Constants.getInstance(DemoContainer.class).getKeys());
         assertTrue(anyValueInTheContainerKeysByClass);
 
-
-        // Any relation in the whole class !!
+        // Any relation in the whole class
         var anyRelationInTheContainerByClass = Constants.anyRelation(4, Constants.getInstance(DemoRelationContainerWithConstants.class));
         assertTrue(anyRelationInTheContainerByClass);
 
-        // Like comparing enums with some String
+        // Any constant value matches the value
         var anyValueByConstants = Constants.anyValue("One", DemoRelationContainerWithConstants.ONE, DemoRelationContainerWithConstants.TWO, DemoRelationContainerWithConstants.THREE);
         assertTrue(anyValueByConstants);
         // Very handy in finding any relation by static references of the constants
@@ -134,8 +135,6 @@ public class DemoTest {
         var one = Constants.getKeyValue("One", DemoRelationContainerWithConstants.class);
         assertTrue(one.isPresent());
         assertEquals(one.get(), DemoRelationContainerWithConstants.ONE.getValue());
-
-        //
 
         // Operations on the constants
         var oneKey = DemoRelationContainerWithConstants.ONE.getKey();
