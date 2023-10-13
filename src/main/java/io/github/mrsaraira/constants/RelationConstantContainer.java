@@ -3,6 +3,7 @@ package io.github.mrsaraira.constants;
 import io.github.mrsaraira.constants.containers.AbstractRelationConstantContainer;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * A container that stores constants and their relations.
@@ -37,9 +38,9 @@ public interface RelationConstantContainer<L, R> extends ConstantContainer<L> {
     /**
      * Get all relation values of the container.
      *
-     * @return collection of relation values of the container for each key
+     * @return list of relation values collections of the container
      */
-    default Collection<Collection<R>> getRelationValues() {
+    default List<Collection<R>> getRelationValues() {
         return Constants.Inner.getConstantTypeRelationValues(this);
     }
 

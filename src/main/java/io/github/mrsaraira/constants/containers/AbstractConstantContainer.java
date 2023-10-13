@@ -3,11 +3,7 @@ package io.github.mrsaraira.constants.containers;
 import io.github.mrsaraira.constants.Constant;
 import io.github.mrsaraira.constants.ConstantContainer;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.*;
 
 /**
  * Implementation of {@link ConstantContainer} that stores constants in {@link java.util.Set}.
@@ -26,9 +22,8 @@ public abstract class AbstractConstantContainer<T> implements ConstantContainer<
     protected final Collection<Constant<T>> constants;
 
     protected AbstractConstantContainer() {
-        this.constants = initialConstants()
-                .stream()
-                .collect(Collectors.toUnmodifiableSet());
+        Set<Constant<T>> collect = new LinkedHashSet<>(initialConstants());
+        this.constants = Collections.unmodifiableSet(collect);
     }
 
     /**
@@ -49,7 +44,7 @@ public abstract class AbstractConstantContainer<T> implements ConstantContainer<
     }
 
     @Override
-    public final Collection<T> getKeyValues() {
+    public final Set<T> getKeyValues() {
         return ConstantContainer.super.getKeyValues();
     }
 

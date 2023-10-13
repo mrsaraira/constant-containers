@@ -3,8 +3,8 @@ package io.github.mrsaraira.constants;
 import java.util.Collection;
 
 /**
- * A constant that contains a key and it's relations.
- * The keys <b>have to be unique</b> as if where defined in enum class.
+ * A constant that contains a key and its relations.
+ * The keys <b>have to be unique</b> as if where defined in an enum class.
  *
  * @param <L> key type
  * @param <R> relations type
@@ -16,14 +16,14 @@ import java.util.Collection;
 public interface RelationConstant<L, R> extends Constant<L> {
 
     /**
-     * Get constant key.
+     * Get the key i.e. (value as {@link Constant}).
      *
      * @return constant key
      */
     Constant<L> getKey();
 
     /**
-     * Get constant relations.
+     * Get relations as constants.
      *
      * @return constant relations
      */

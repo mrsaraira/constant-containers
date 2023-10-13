@@ -1,7 +1,7 @@
 package io.github.mrsaraira.constants;
 
 /**
- * A constant that contains a value.
+ * A constant with value.
  *
  * @param <T> value type
  * @author Takhsin Saraira
@@ -10,9 +10,9 @@ package io.github.mrsaraira.constants;
 public interface Constant<T> {
 
     /**
-     * Get contained value.
+     * Get the constant value.
      *
-     * @return contained value
+     * @return constant value
      */
     T getValue();
 

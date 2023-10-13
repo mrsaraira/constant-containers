@@ -4,6 +4,7 @@ import io.github.mrsaraira.constants.containers.AbstractConstantContainer;
 
 import java.util.Collection;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * A container that stores constants with the same contained value type (the key value).
@@ -38,7 +39,7 @@ public interface ConstantContainer<T> {
      *
      * @return key values of the container
      */
-    default Collection<T> getKeyValues() {
+    default Set<T> getKeyValues() {
         return Constants.Inner.getConstantTypeKeys(this);
     }
 

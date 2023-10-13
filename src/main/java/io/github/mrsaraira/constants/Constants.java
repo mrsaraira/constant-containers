@@ -1,7 +1,5 @@
 package io.github.mrsaraira.constants;
 
-import io.github.mrsaraira.constants.containers.AbstractConstantContainer;
-import io.github.mrsaraira.constants.containers.AbstractRelationConstantContainer;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 
@@ -24,105 +22,104 @@ import java.util.stream.Stream;
 @UtilityClass
 public final class Constants {
 
-    //  ------------------------------ Construct ------------------------------ //
-
-    public static <T> Constant<T> of(T key) {
-        return new ConstantImpl<>(key);
+    /**
+     * Create a {@link Constant} of some value.
+     *
+     * @param value constant value
+     * @param <T>   value type
+     * @return constant of a value
+     */
+    public static <T> Constant<T> of(T value) {
+        return new ConstantImpl<>(value);
     }
 
-    @SafeVarargs
-    public static <L, R> RelationConstant<L, R> of(@NonNull L key, @NonNull R... relations) {
-        return new RelationConstantImpl<L, R>(new ConstantImpl<>(key), Set.of(Constants.concat(relations)));
-    }
-
-    @SafeVarargs
-    public static <L, R> RelationConstant<L, R> of(@NonNull Constant<L> key, @NonNull R... relations) {
-        return new RelationConstantImpl<>(key, Set.of(Constants.concat(relations)));
-    }
-
-    @SafeVarargs
-    public static <L, R> RelationConstant<L, R> of(@NonNull Constant<L> key, Constant<R>... relations) {
-        return new RelationConstantImpl<>(key, Set.of(relations));
-    }
-
-    @SafeVarargs
-    public static <T, R> RelationConstant<T, R> relate(@NonNull Constant<T> key, Constant<R>... relations) {
-        return new RelationConstantImpl<>(key, Set.of(relations));
-    }
-
-    @SafeVarargs
-    public static <T, R> RelationConstant<T, R> relate(@NonNull T key, R... relations) {
-        return new RelationConstantImpl<>(new ConstantImpl<>(key), Set.of(Constants.concat(relations)));
-    }
-
-    @SafeVarargs
-    public static <T, R> RelationConstantContainer<T, R> createRelationContainer(@NonNull T key, R... relations) {
-        return new AbstractRelationConstantContainer<T, R>() {
-            @Override
-            protected List<RelationConstant<T, R>> initialConstants() {
-                return List.of(
-                        Constants.relate(key, relations)
-                );
-            }
-        };
-    }
-
-    @SafeVarargs
-    public static <T> ConstantContainer<T> createConstantContainer(@NonNull T... keys) {
-        return new AbstractConstantContainer<T>() {
-            @Override
-            protected List<Constant<T>> initialConstants() {
-                return List.of(Constants.concat(keys));
-            }
-        };
-    }
-
-    // ------------------------------ Transform ------------------------------ //
+    /**
+     * Concatenate constant values.
+     *
+     * @param <T> values type
+     * @return constants array
+     */
     @SafeVarargs
     @SuppressWarnings("unchecked")
-    public static <T> Constant<T>[] concat(@NonNull T... constants) {
-        return Stream.of(constants).map(ConstantImpl::new).toArray(ConstantImpl[]::new);
+    public static <T> Constant<T>[] concat(@NonNull T... values) {
+        return Stream.of(values)
+                .map(ConstantImpl::new)
+                .toArray(ConstantImpl[]::new);
     }
 
-    @SafeVarargs
-    public static <T, R extends Constant<T>, C extends Collection<Constant<T>>> C concat(@NonNull Supplier<C> collectionSupplier, @NonNull T... constants) {
-        return Stream.of(Constants.concat(constants)).collect(Collectors.toCollection(collectionSupplier));
-    }
-
+    /**
+     * Concatenate relation constants.
+     *
+     * @param <V> constant value type
+     * @param <R> relation constants value type
+     * @param <C> array of relation constants
+     * @return array of relation constants
+     */
     @SafeVarargs
     @SuppressWarnings("unchecked")
-    public static <L, R, C extends RelationConstant<L, R>> RelationConstant<L, R>[] concat(@NonNull C... relationConstants) {
-        return Stream.of(relationConstants).map(c -> of(c.getKey(), c.getRelations())).toArray(RelationConstant[]::new);
+    public static <V, R, C extends RelationConstant<V, R>> RelationConstant<V, R>[] concat(@NonNull C... relationConstants) {
+        return Stream.of(relationConstants)
+                .map(relationConstant -> Constants.of(relationConstant.getKey(), relationConstant.getRelations()))
+                .toArray(RelationConstant[]::new);
     }
 
+    /**
+     * Collect any values into collection supplied.
+     *
+     * @param collectionSupplier collection supplier
+     * @param any                any values
+     * @param <T>                values type
+     * @return collection of any's
+     */
     @SafeVarargs
-    public static <L, R, C extends Collection<RelationConstant<L, R>>> Collection<RelationConstant<L, R>> concat(@NonNull Supplier<C> collectionSupplier, @NonNull RelationConstant<L, R>... relationConstants) {
-        return Stream.of(Constants.concat(relationConstants)).collect(Collectors.toCollection(collectionSupplier));
+    public static <T> Collection<T> collect(@NonNull Supplier<Collection<T>> collectionSupplier, @NonNull T... any) {
+        return Stream.of(any).collect(Collectors.toCollection(collectionSupplier));
+    }
+
+    /**
+     * Create a {@link RelationConstant} with its relations.
+     *
+     * @param value          constant value
+     * @param relationValues constant relation values
+     * @param <L>            constant value type
+     * @param <R>            constant relation values type
+     * @return relation constant
+     */
+    @SafeVarargs
+    public static <L, R> RelationConstant<L, R> of(@NonNull L value, @NonNull R... relationValues) {
+        return new RelationConstantImpl<>(new ConstantImpl<>(value), Set.of(Constants.concat(relationValues)));
     }
 
     @SuppressWarnings("unchecked")
     public static <T> Constant<T>[] constantsToArray(@NonNull Collection<Constant<T>> constants) {
-        return constants.toArray(new Constant[0]);
+        return Constants.toArray(constants);
+//        return constants.toArray(new Constant[0]);
     }
 
     @SuppressWarnings("unchecked")
     public static <L, R> RelationConstant<L, R>[] relationConstantsToArray(@NonNull Collection<RelationConstant<L, R>> constants) {
-        return constants.toArray(new RelationConstant[0]);
+        return Constants.toArray(constants);
+//        return constants.toArray(new RelationConstant[0]);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T, C> T[] toArray(@NonNull Collection<T> constants) {
+        return (T[]) constants.toArray();
     }
 
     // ------------------------------ Test ------------------------------ //
 
     @SafeVarargs
-    public static <T> boolean anyMatch(T key, @NonNull Constant<T>... constant) {
+    public static <T> boolean anyValue(T key, @NonNull Constant<T>... constant) {
         return Stream.of(constant).anyMatch(c -> Objects.equals(c.getValue(), key));
     }
 
-    public static <T> boolean anyMatch(T key, @NonNull Collection<Constant<T>> constant) {
+    public static <T> boolean anyValue(T key, @NonNull Collection<Constant<T>> constant) {
         return constant.stream().anyMatch(c -> Objects.equals(c.getValue(), key));
     }
 
     @SafeVarargs
-    public static <T> boolean anyMatch(Predicate<Constant<T>> condition, @NonNull Constant<T>... constant) {
+    public static <T> boolean anyValue(Predicate<Constant<T>> condition, @NonNull Constant<T>... constant) {
         return Stream.of(constant).anyMatch(condition);
     }
 
@@ -161,7 +158,7 @@ public final class Constants {
         return Inner.getConstantTypeRelationValues(getInstance(type));
     }
 
-    public static <T, C extends ConstantContainer<T>> Collection<T> getConstantTypeKeys(@NonNull Class<C> type) {
+    public static <T, C extends ConstantContainer<T>> Set<T> getConstantTypeKeys(@NonNull Class<C> type) {
         return Inner.getConstantTypeKeys(getInstance(type));
     }
 
@@ -176,9 +173,9 @@ public final class Constants {
 
         private final Map<Class<?>, ConstantContainer<?>> CONSTANTS_CACHE = new HashMap<>();
 
-        static <T, C extends ConstantContainer<T>> Collection<T> getConstantTypeKeys(C constantContainer) {
+        static <T, C extends ConstantContainer<T>> Set<T> getConstantTypeKeys(C constantContainer) {
             if (constantContainer == null) {
-                return Collections.emptyList();
+                return Collections.emptySet();
             }
 
             saveToCache(constantContainer);
@@ -188,7 +185,7 @@ public final class Constants {
                     .collect(Collectors.toUnmodifiableSet());
         }
 
-        static <R, C extends RelationConstantContainer<?, R>> Collection<Collection<R>> getConstantTypeRelationValues(C relationConstantContainer) {
+        static <R, C extends RelationConstantContainer<?, R>> List<Collection<R>> getConstantTypeRelationValues(C relationConstantContainer) {
             if (relationConstantContainer == null) {
                 return Collections.emptyList();
             }
@@ -203,6 +200,11 @@ public final class Constants {
 
         private static <R, T extends Constant<R>> R mapToValueFunction(T constant) {
             return constant.getValue();
+        }
+
+        @SafeVarargs
+        private static <T> Collection<T> collect(@NonNull Supplier<Collection<T>> collectionSupplier, @NonNull T... any) {
+            return Stream.of(any).collect(Collectors.toCollection(collectionSupplier));
         }
 
         private static void saveToCache(ConstantContainer<?> constantContainer) {

@@ -21,7 +21,7 @@ class RelationConstantImpl<L, R> implements RelationConstant<L, R> {
 
     @Override
     public L getValue() {
-        return key.getValue();
+        return getKey().getValue();
     }
 
 }
