@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class DemoTest {
 
-    private static class DemoContainer extends AbstractConstantContainer<String> {
+    public static class DemoContainer extends AbstractConstantContainer<String> {
 
         @Override
         protected List<Constant<String>> initialConstants() {
@@ -27,7 +27,7 @@ public class DemoTest {
 
     }
 
-    private static class DemoContainerWithFields extends AbstractConstantContainer<String> {
+    public static class DemoContainerWithFields extends AbstractConstantContainer<String> {
 
         // local variables
         public final Constant<String> ONE = Constants.of("One");
@@ -46,7 +46,7 @@ public class DemoTest {
 
     }
 
-    private static class DemoRelationContainerWithStaticConstants extends AbstractRelationConstantContainer<String, Integer> {
+    public static class DemoRelationContainerWithStaticConstants extends AbstractRelationConstantContainer<String, Integer> {
 
         // static references
         public static final RelationConstant<String, Integer> ONE = Constants.of("One", 1);
