@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -26,12 +27,12 @@ public class DemoTest {
 
     }
 
-    private static class DemoContainerWithConstants extends AbstractConstantContainer<String> {
+    private static class DemoContainerWithFields extends AbstractConstantContainer<String> {
 
-// the constant refs can be public final and referenced by Constants.getInstance(DemoContainerWithConstants.class).ONE 
-        public static final Constant<String> ONE = Constants.of("One");
-        public static final Constant<String> TWO = Constants.of("Two");
-        public static final Constant<String> THREE = Constants.of("Three");
+        // local variables
+        public final Constant<String> ONE = Constants.of("One");
+        public final Constant<String> TWO = Constants.of("Two");
+        public final Constant<String> THREE = Constants.of("Three");
 
         @Override
         protected List<Constant<String>> initialConstants() {
@@ -45,9 +46,9 @@ public class DemoTest {
 
     }
 
-    private static class DemoRelationContainerWithConstants extends AbstractRelationConstantContainer<String, Integer> {
+    private static class DemoRelationContainerWithStaticConstants extends AbstractRelationConstantContainer<String, Integer> {
 
-
+        // static references
         public static final RelationConstant<String, Integer> ONE = Constants.of("One", 1);
         public static final RelationConstant<String, Integer> TWO = Constants.of("Two", 2);
         public static final RelationConstant<String, Integer> THREE = Constants.of("Three", 3);
@@ -68,7 +69,7 @@ public class DemoTest {
 
     @Test
     void demo() {
-        // Demo examples. Just follow
+        // Demo examples. Just follow :)
 
         var container = new AbstractRelationConstantContainer<String, Integer>() {
             @Override
@@ -86,22 +87,33 @@ public class DemoTest {
         var relations = container.getRelations("One");
 
         assertNotNull(keyConstant);
-        assertNotNull(relations);
         assertTrue(keyConstant.isPresent());
-
         var constant = keyConstant.get();
         assertEquals(constant.getValue(), "One");
+
+        assertNotNull(relations);
         assertEquals(1, relations.size());
         assertEquals(1, relations.iterator().next().getValue());
 
-        // Same as Enum.values();
-        var allKeyValues = Constants.getInstance(container.getClass()).getKeyValues();
+        /*
+        Constants.getInstance(clazz) does not support anonymous classes, anyway you cannot use the container anywhere
+         beside this method, so it's considered that you have container instance already ☺ -> (var container)
+        var allKeyValues = Constants.getInstance(container.getClass()); // will fail in runtime
+        Thus we will use inner class container - DemoRelationContainerWithConstants with same values and relations for the next examples
+        */
+        var innerClassContainer = Constants.getInstance(DemoRelationContainerWithStaticConstants.class);
+
+        // The container instances are cached once and then reused
+        assertEquals(innerClassContainer, Constants.getInstance(DemoRelationContainerWithStaticConstants.class));
+
+        // Get all the keys of the container. Same as Enum.values()
+        var allKeyValues = innerClassContainer.getKeyValues();
         assertNotNull(allKeyValues);
         assertTrue(allKeyValues.containsAll(Set.of("One", "Two", "Three")));
 
-
-        // Get all relation values for each key
-        var relationValues = Constants.getInstance(container.getClass()).getRelationValues();
+        // Get all relation values for each key ordered as in the constant container.
+        // List<Collection<Integer>> - [ [1], [2], [3], [3,4] ]
+        var relationValues = Constants.getInstance(DemoRelationContainerWithStaticConstants.class).getRelationValues();
         assertNotNull(relationValues);
         assertEquals(4, relationValues.size()); // 4 items == 4 relation values collections
 
@@ -114,34 +126,34 @@ public class DemoTest {
         var lastRelationCollection = relationValues.get(relationValues.size() - 1);
         assertTrue(lastRelationCollection.containsAll(List.of(4, 5)));
 
-        var anyRelationInTheContainer1 = Constants.anyRelation(3, container); // by the container
-        assertTrue(anyRelationInTheContainer1);
-        var anyRelationInTheContainer2 = Constants.anyRelation(3, Constants.getInstance(container.getClass()));  // by the container class
-        assertTrue(anyRelationInTheContainer2);
-        var anyValueInTheContainerKeysByClass = Constants.anyValue("Three", Constants.getInstance(DemoContainer.class).getKeys());
-        assertTrue(anyValueInTheContainerKeysByClass);
+        // Check if any relation in the container
+        assertTrue(Constants.anyRelation(3, container));
+        assertFalse(Constants.anyRelation(10, Constants.getInstance(container.getClass())));
 
-        // Any relation in the whole class
-        var anyRelationInTheContainerByClass = Constants.anyRelation(4, Constants.getInstance(DemoRelationContainerWithConstants.class));
-        assertTrue(anyRelationInTheContainerByClass);
+        // Check if any value in the container
+        assertTrue(Constants.anyValue("Three", Constants.getInstance(DemoContainer.class))); // constant container
+        assertTrue(Constants.anyValue("Three", Constants.getInstance(DemoRelationContainerWithStaticConstants.class))); // relation constant container
 
         // Any constant value matches the value
-        var anyValueByConstants = Constants.anyValue("One", DemoRelationContainerWithConstants.ONE, DemoRelationContainerWithConstants.TWO, DemoRelationContainerWithConstants.THREE);
-        assertTrue(anyValueByConstants);
-        // Very handy in finding any relation by static references of the constants
-        var anyRelationByRelationConstants = Constants.anyRelation(1, DemoRelationContainerWithConstants.ONE, DemoRelationContainerWithConstants.TWO, DemoRelationContainerWithConstants.THREE);
-        assertTrue(anyRelationByRelationConstants);
+        assertTrue(Constants.anyValue("One", DemoRelationContainerWithStaticConstants.ONE, DemoRelationContainerWithStaticConstants.TWO, DemoRelationContainerWithStaticConstants.THREE));
 
-        var one = Constants.getKeyValue("One", DemoRelationContainerWithConstants.class);
+        // Check any relation by static references of the constants
+        assertTrue(Constants.anyRelation(1, DemoRelationContainerWithStaticConstants.ONE, DemoRelationContainerWithStaticConstants.TWO, DemoRelationContainerWithStaticConstants.THREE));
+        // Check any value by container local refs
+        var containerWithFields = Constants.getInstance(DemoContainerWithFields.class);
+        assertTrue(Constants.anyValue("One", containerWithFields.ONE, containerWithFields.TWO, containerWithFields.THREE));
+
+        // Get constant by value
+        var one = Constants.getKeyValue("One", DemoRelationContainerWithStaticConstants.class); // optional
         assertTrue(one.isPresent());
-        assertEquals(one.get(), DemoRelationContainerWithConstants.ONE.getValue());
+        assertEquals(one.get(), DemoRelationContainerWithStaticConstants.ONE.getValue());
 
         // Operations on the constants
-        var oneKey = DemoRelationContainerWithConstants.ONE.getKey();
+        var oneKey = DemoRelationContainerWithStaticConstants.ONE.getKey();
         assertEquals(Constants.of("One"), oneKey);
-        var oneValue = DemoRelationContainerWithConstants.ONE.getKey().getValue();
+        var oneValue = DemoRelationContainerWithStaticConstants.ONE.getKey().getValue();
         assertEquals("One", oneValue);
-        var oneRelations = DemoRelationContainerWithConstants.ONE.getRelations();
+        var oneRelations = DemoRelationContainerWithStaticConstants.ONE.getRelations();
         assertEquals(1, oneRelations.size());
         assertTrue(Constants.anyValue(1, oneRelations));
     }

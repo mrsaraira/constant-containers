@@ -8,7 +8,7 @@ import java.util.*;
 /**
  * Implementation of {@link ConstantContainer} that stores constants in {@link java.util.Set}.
  * If keys have same value, then only one key will be stored.
- * <br><b>Requirement:</b> The inheritor class must have no-args constructor!
+ * <br><b>Requirement:</b> The inheritor class must have no-args constructor.
  * <p>
  * {@inheritDoc}
  *

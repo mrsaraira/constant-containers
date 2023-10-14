@@ -119,8 +119,11 @@ public final class Constants {
     }
 
     @SafeVarargs
-    public static <T> boolean anyValue(Predicate<Constant<T>> condition, @NonNull Constant<T>... constant) {
-        return Stream.of(constant).anyMatch(condition);
+    public static <T, C extends ConstantContainer<T>> boolean anyValue(T value, @NonNull C... containers) {
+        return Stream.of(containers)
+                .anyMatch(c -> c.getKeys().stream()
+                        .map(Inner::mapToValueFunction)
+                        .anyMatch(t -> Objects.equals(t, value)));
     }
 
     @SafeVarargs
@@ -163,6 +166,15 @@ public final class Constants {
     }
 
 
+    /**
+     * Get constant container instance by class. Internally the instances are cached thus every next call will be instant.
+     * The purpose is to have access to constant containers anywhere from the code.
+     * <br><b>Note</b>: Anonymous class are not supported.
+     *
+     * @param type container class
+     * @param <T>  container class type
+     * @return instance of the container class
+     */
     public static <T extends ConstantContainer<?>> T getInstance(@NonNull Class<T> type) {
         return (T) Inner.getInstance(type);
     }
