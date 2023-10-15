@@ -4,7 +4,6 @@ import java.util.Collection;
 
 /**
  * A constant that contains a key and its relations.
- * The keys <b>have to be unique</b> as if where defined in an enum class.
  *
  * @param <L> key type
  * @param <R> relations type
@@ -16,7 +15,7 @@ import java.util.Collection;
 public interface RelationConstant<L, R> extends Constant<L> {
 
     /**
-     * Get the key i.e. (value as {@link Constant}).
+     * Get the key constant.
      *
      * @return constant key
      */

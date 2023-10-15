@@ -8,7 +8,8 @@ import java.util.*;
 /**
  * Implementation of {@link ConstantContainer} that stores constants in {@link java.util.Set}.
  * If keys have same value, then only one key will be stored.
- * <br><b>Requirement:</b> The inheritor class must have no-args constructor.
+ * <br><b>Requirement:</b> The <u>constants</u> <b>must be static or static final</b> if passed to
+ * {@link AbstractConstantContainer#initialConstants() initialConstants()} method from the container class fields!
  * <p>
  * {@inheritDoc}
  *
@@ -44,8 +45,8 @@ public abstract class AbstractConstantContainer<T> implements ConstantContainer<
     }
 
     @Override
-    public final Set<T> getKeyValues() {
-        return ConstantContainer.super.getKeyValues();
+    public final Set<T> getAllValues() {
+        return ConstantContainer.super.getAllValues();
     }
 
 }

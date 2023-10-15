@@ -12,7 +12,9 @@ import java.util.stream.Collectors;
  * Implementation of {@link RelationConstantContainer} that stores constants in {@link java.util.HashMap}.
  * The keys relations might have same values for different keys.
  * The keys ordered as initial constants list.
- * <br><b>Requirement:</b> The inheritor class must have no-args constructor!
+ * <br><b>Requirement:</b> The <u>constants</u> <b>must be static or static final</b> if passed to
+ * {@link AbstractConstantContainer#initialConstants() initialConstants()} method from the container class fields!
+ * <br><b>Requirement2:</b> The keys <b>must be unique</b> as if they were defined in enum class.
  * <p>
  * {@inheritDoc}
  *
@@ -31,7 +33,10 @@ public abstract class AbstractRelationConstantContainer<L, R> implements Relatio
                 initialConstants()
                         .stream()
                         .collect(Collectors.toMap(RelationConstant::getKey, RelationConstant::getRelations,
-                                (constants, constants2) -> constants,
+                                (constants, constants2) -> {
+                                    constants.addAll(constants2);
+                                    return constants;
+                                },
                                 LinkedHashMap::new));
         this.constantsMap = Collections.unmodifiableMap(constantsMap);
     }
@@ -64,13 +69,13 @@ public abstract class AbstractRelationConstantContainer<L, R> implements Relatio
     }
 
     @Override
-    public final Set<L> getKeyValues() {
-        return RelationConstantContainer.super.getKeyValues();
+    public final Set<L> getAllValues() {
+        return RelationConstantContainer.super.getAllValues();
     }
 
     @Override
-    public final List<Collection<R>> getRelationValues() {
-        return RelationConstantContainer.super.getRelationValues();
+    public final List<Collection<R>> getAllRelationsValues() {
+        return RelationConstantContainer.super.getAllRelationsValues();
     }
 
 }

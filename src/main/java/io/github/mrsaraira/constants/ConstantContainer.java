@@ -35,12 +35,12 @@ public interface ConstantContainer<T> {
     Collection<Constant<T>> getKeys();
 
     /**
-     * Get all key values of the container.
+     * Get all values of the container.
      *
-     * @return key values of the container
+     * @return all values of the container
      */
-    default Set<T> getKeyValues() {
-        return Constants.Inner.getConstantTypeKeys(this);
+    default Set<T> getAllValues() {
+        return Constants.Inner.getAllConstantsValues(this);
     }
 
 }

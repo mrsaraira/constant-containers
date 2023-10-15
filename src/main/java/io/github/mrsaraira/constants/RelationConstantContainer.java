@@ -8,7 +8,6 @@ import java.util.List;
 /**
  * A container that stores constants and their relations.
  * The relation constants can be operated using utility class {@link Constants} or custom logic.
- * The keys <b>have to be unique</b> as if where defined in enum class.
  *
  * @param <L> constant keys values type
  * @param <R> relation constants value type
@@ -21,7 +20,7 @@ import java.util.List;
 public interface RelationConstantContainer<L, R> extends ConstantContainer<L> {
 
     /**
-     * Get relations by key value.
+     * Get relations by constant key value.
      *
      * @param keyValue key value.
      * @return collection of relation as constants.
@@ -40,8 +39,8 @@ public interface RelationConstantContainer<L, R> extends ConstantContainer<L> {
      *
      * @return list of relation values collections of the container
      */
-    default List<Collection<R>> getRelationValues() {
-        return Constants.Inner.getConstantTypeRelationValues(this);
+    default List<Collection<R>> getAllRelationsValues() {
+        return Constants.Inner.getAllRelationsValues(this);
     }
 
 }
