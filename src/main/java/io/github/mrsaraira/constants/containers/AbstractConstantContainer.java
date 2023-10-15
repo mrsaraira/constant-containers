@@ -6,8 +6,8 @@ import io.github.mrsaraira.constants.ConstantContainer;
 import java.util.*;
 
 /**
- * Implementation of {@link ConstantContainer} that stores constants in {@link java.util.Set}.
- * If keys have same value, then only one key will be stored.
+ * Implementation of {@link ConstantContainer} that stores constants in unmodifiable ordered Set, where similar keys are stored once.
+ *
  * <br><b>Requirement:</b> The <u>constants</u> <b>must be static or static final</b> if passed to
  * {@link AbstractConstantContainer#initialConstants() initialConstants()} method from the container class fields!
  * <p>

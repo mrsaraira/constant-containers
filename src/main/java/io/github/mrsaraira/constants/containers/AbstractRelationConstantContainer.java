@@ -9,7 +9,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Implementation of {@link RelationConstantContainer} that stores constants in {@link java.util.HashMap}.
+ * Implementation of {@link RelationConstantContainer} that stores constants in unmodifiable ordered Map.
  * The keys relations might have same values for different keys.
  * The keys ordered as initial constants list.
  * <br><b>Requirement:</b> The <u>constants</u> <b>must be static or static final</b> if passed to
@@ -34,8 +34,7 @@ public abstract class AbstractRelationConstantContainer<L, R> implements Relatio
                         .stream()
                         .collect(Collectors.toMap(RelationConstant::getKey, RelationConstant::getRelations,
                                 (constants, constants2) -> {
-                                    constants.addAll(constants2);
-                                    return constants;
+                                    throw new IllegalArgumentException("Duplicated keys were found");
                                 },
                                 LinkedHashMap::new));
         this.constantsMap = Collections.unmodifiableMap(constantsMap);

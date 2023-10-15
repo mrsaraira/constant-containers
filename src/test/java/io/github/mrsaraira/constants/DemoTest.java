@@ -12,88 +12,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class DemoTest {
 
-    private static class DemoContainer extends AbstractConstantContainer<String> {
-
-        @Override
-        protected List<Constant<String>> initialConstants() {
-            return List.of(Constants.concat(
-                    "One",
-                    "Two",
-                    "Three"
-            ));
-        }
-
-    }
-
-    // This is a wrong example, you should not do it if you want to refer to this container using Constants.getInstance
-    private static class WrongDemoContainerWithNonStaticConstantsFields extends AbstractConstantContainer<String> {
-
-        public final Constant<String> ONE = Constants.of("One");
-        public final Constant<String> TWO = Constants.of("Two");
-        public final Constant<String> THREE = Constants.of("Three");
-
-        @Override
-        protected List<Constant<String>> initialConstants() {
-            return List.of(ONE, TWO, THREE);
-        }
-
-    }
-
-    // This is example however will work, because values are initiated and not the constants in the local fields.
-    // But this is not as useful as other containers, or using Constant.
-    private static class DemoContainerWithNonStaticValuesFields extends AbstractConstantContainer<String> {
-
-        public final String ONE = "One";
-        public final String TWO = "Two";
-        public final String THREE = "Three";
-
-        @Override
-        protected List<Constant<String>> initialConstants() {
-            return List.of(Constants.concat(ONE, TWO, THREE));
-        }
-
-    }
-
-    private static class DemoContainerWithStaticFields extends AbstractConstantContainer<String> {
-
-        // local variables
-        public static Constant<String> ONE = Constants.of("One");
-        public static Constant<String> TWO = Constants.of("Two");
-        public static Constant<String> THREE = Constants.of("Three");
-
-        @Override
-        protected List<Constant<String>> initialConstants() {
-            // use ctrl + alt + c in INTELLIJ IDEA to define constants static final without typing the types for each field
-            return List.of(
-                    ONE,
-                    TWO,
-                    THREE
-            );
-        }
-
-    }
-
-    private static class DemoRelationContainerWithStaticFinalFields extends AbstractRelationConstantContainer<String, Integer> {
-
-        // static references
-        public static final RelationConstant<String, Integer> ONE = Constants.of("One", 1);
-        public static final RelationConstant<String, Integer> TWO = Constants.of("Two", 2);
-        public static final RelationConstant<String, Integer> THREE = Constants.of("Three", 3);
-        public static final RelationConstant<String, Integer> FOUR_FIVE = Constants.of("FOUR_FIVE", 4, 5);
-
-        @Override
-        protected List<RelationConstant<String, Integer>> initialConstants() {
-            // use ctrl + alt + c in INTELLIJ IDEA to define constants static final without typing the types for each field
-            return List.of(
-                    ONE,
-                    TWO,
-                    THREE,
-                    FOUR_FIVE
-            );
-        }
-
-    }
-
     @Test
     void demo() {
         // Demo examples. Just follow :)
@@ -159,7 +77,7 @@ public class DemoTest {
         assertFalse(Constants.anyRelation(10, Constants.getInstance(innerClassContainer.getClass())));
 
         // Check if any value in the container
-        assertTrue(Constants.anyValue("Three", Constants.getInstance(DemoContainer.class))); // constant container
+        assertTrue(Constants.anyValue("Three", Constants.getInstance(DemoConstantContainer.class))); // constant container
         assertTrue(Constants.anyValue("Three", Constants.getInstance(DemoRelationContainerWithStaticFinalFields.class))); // relation constant container
 
         // Any constant value matches the value
@@ -171,19 +89,13 @@ public class DemoTest {
         var containerWithFields = Constants.getInstance(DemoContainerWithStaticFields.class);
         assertTrue(Constants.anyValue("One", DemoContainerWithStaticFields.ONE, DemoContainerWithStaticFields.TWO, DemoContainerWithStaticFields.THREE));
 
-        // This will fail and throw exception because local fields are used for constants
-        assertThrows(IllegalStateException.class, () -> Constants.getInstance(WrongDemoContainerWithNonStaticConstantsFields.class));
-        // However this example works fine because values are the local fields not the constants
-        assertNotNull(Constants.getInstance(DemoContainerWithNonStaticValuesFields.class));
-        assertTrue(Constants.anyValue("Three", Constants.getInstance(DemoContainerWithNonStaticValuesFields.class)));
-
         // Get optional constant by value
         var one = Constants.getKeyValue("One", DemoRelationContainerWithStaticFinalFields.class);
         assertTrue(one.isPresent());
         assertEquals(one.get(), DemoRelationContainerWithStaticFinalFields.ONE.getValue());
 
         // Get optional constant by custom condition
-        var optionalThree = Constants.getKeyValue((Predicate<String>) value -> value.equalsIgnoreCase("three"), DemoContainer.class);
+        var optionalThree = Constants.getKeyValue((Predicate<String>) value -> value.equalsIgnoreCase("three"), DemoConstantContainer.class);
         assertTrue(optionalThree.isPresent());
         assertEquals("Three", optionalThree.get());
 
@@ -195,6 +107,127 @@ public class DemoTest {
         var oneRelations = DemoRelationContainerWithStaticFinalFields.ONE.getRelations();
         assertEquals(1, oneRelations.size());
         assertTrue(Constants.anyValue(1, oneRelations));
+
+        // Negative tests on wrong examples and fine ones
+
+        // This will fail because non-static class fields are used for constants passed to initialConstants()
+        assertThrows(IllegalStateException.class, () -> Constants.getInstance(WrongDemoContainerWithNonStaticConstantsFields.class));
+        // However this example works fine because values are the local non-static fields not the Constants
+        // Although it's not very useful to have the static values when you work with Constants
+        assertNotNull(Constants.getInstance(DemoContainerWithNonStaticValuesFields.class));
+
+        // Duplicated keys in relation constant container exception example
+        assertThrows(IllegalStateException.class, () -> Constants.getInstance(WrongDemoRelationContainerWithDuplicatedKeys.class));
+        // Duplicated keys in constant container works fine
+        assertEquals(2, Constants.getInstance(DemoConstantContainerWithDuplicatedKeys.class).getKeys().size());
+    }
+
+
+    // ------------------ Demo constant containers ------------------ //
+
+    private static class DemoConstantContainer extends AbstractConstantContainer<String> {
+
+        @Override
+        protected List<Constant<String>> initialConstants() {
+            return List.of(Constants.concat(
+                    "One",
+                    "Two",
+                    "Three"
+            ));
+        }
+
+    }
+
+    private static class DemoContainerWithStaticFields extends AbstractConstantContainer<String> {
+
+        // local variables
+        public static Constant<String> ONE = Constants.of("One");
+        public static Constant<String> TWO = Constants.of("Two");
+        public static Constant<String> THREE = Constants.of("Three");
+
+        @Override
+        protected List<Constant<String>> initialConstants() {
+            // use ctrl + alt + c in INTELLIJ IDEA to define constants static final without typing the types for each field
+            return List.of(
+                    ONE,
+                    TWO,
+                    THREE
+            );
+        }
+
+    }
+
+    private static class DemoRelationContainerWithStaticFinalFields extends AbstractRelationConstantContainer<String, Integer> {
+
+        // static references
+        public static final RelationConstant<String, Integer> ONE = Constants.of("One", 1);
+        public static final RelationConstant<String, Integer> TWO = Constants.of("Two", 2);
+        public static final RelationConstant<String, Integer> THREE = Constants.of("Three", 3);
+        public static final RelationConstant<String, Integer> FOUR_FIVE = Constants.of("FOUR_FIVE", 4, 5);
+
+        @Override
+        protected List<RelationConstant<String, Integer>> initialConstants() {
+            // use ctrl + alt + c in INTELLIJ IDEA to define constants static final without typing the types for each field
+            return List.of(
+                    ONE,
+                    TWO,
+                    THREE,
+                    FOUR_FIVE
+            );
+        }
+
+    }
+
+    // This is a wrong example, you should not do it if you want to refer to this container using Constants.getInstance
+    private static class WrongDemoContainerWithNonStaticConstantsFields extends AbstractConstantContainer<String> {
+
+        public final Constant<String> ONE = Constants.of("One");
+        public final Constant<String> TWO = Constants.of("Two");
+        public final Constant<String> THREE = Constants.of("Three");
+
+        @Override
+        protected List<Constant<String>> initialConstants() {
+            return List.of(ONE, TWO, THREE);
+        }
+
+    }
+
+    // however this container will work, because values are initiated and not the constants in the local fields.
+    // But this container is not as useful as other containers.
+    private static class DemoContainerWithNonStaticValuesFields extends AbstractConstantContainer<String> {
+
+        public final String ONE = "One";
+        public final String TWO = "Two";
+        public final String THREE = "Three";
+
+        @Override
+        protected List<Constant<String>> initialConstants() {
+            return List.of(Constants.concat(ONE, TWO, THREE));
+        }
+
+    }
+
+    // Instantiating this relation constant container with duplicated keys will lead to exception
+    private static class WrongDemoRelationContainerWithDuplicatedKeys extends AbstractRelationConstantContainer<String, String> {
+
+        @Override
+        protected List<RelationConstant<String, String>> initialConstants() {
+            return List.of(Constants.concat(
+                    Constants.of("KEY", "VALUE1"),
+                    Constants.of("KEY", "VALUE2")  // will fail at runtime
+            ));
+        }
+
+    }
+
+    // However this constant container with duplicated keys will store same keys once and will work fine
+    private static class DemoConstantContainerWithDuplicatedKeys extends AbstractConstantContainer<String> {
+
+        @Override
+        protected List<Constant<String>> initialConstants() {
+            return List.of(Constants.concat("ONE", "ONE", "TWO", "TWO"));
+        }
+
     }
 
 }
