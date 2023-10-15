@@ -44,7 +44,25 @@ public final class Constants {
      */
     @SafeVarargs
     public static <L, R> RelationConstant<L, R> of(@NonNull L value, @NonNull R... relationValues) {
-        return new RelationConstantImpl<>(new ConstantImpl<>(value), Set.of(Constants.concat(relationValues)));
+        return new RelationConstantImpl<>(new ConstantImpl<>(value), List.of(Constants.concat(relationValues)));
+    }
+
+    /**
+     * Create a {@link RelationConstant} with its relations stored in supplied collection.
+     *
+     * @param value          key value
+     * @param relationValues relation values
+     * @param <L>            value type
+     * @param <R>            relation values type
+     * @return relation constant
+     */
+    @SafeVarargs
+    public static <L, R> RelationConstant<L, R> of(@NonNull Supplier<Collection<Constant<R>>> collectionSupplier, @NonNull L value, @NonNull R... relationValues) {
+        var collection = collectionSupplier.get();
+        Objects.requireNonNull(collection);
+        collection.addAll(List.of(Constants.concat(relationValues)));
+
+        return new RelationConstantImpl<>(new ConstantImpl<>(value), Collections.unmodifiableCollection(collection));
     }
 
     /**

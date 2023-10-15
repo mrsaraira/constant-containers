@@ -23,8 +23,7 @@ public abstract class AbstractConstantContainer<T> implements ConstantContainer<
     protected final Collection<Constant<T>> constants;
 
     protected AbstractConstantContainer() {
-        Set<Constant<T>> collect = new LinkedHashSet<>(initialConstants());
-        this.constants = Collections.unmodifiableSet(collect);
+        this.constants = Collections.unmodifiableSet(new LinkedHashSet<>(initialConstants()));
     }
 
     /**

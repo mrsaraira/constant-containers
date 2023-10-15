@@ -4,6 +4,7 @@ import io.github.mrsaraira.constants.containers.AbstractRelationConstantContaine
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * A container that stores constants and their relations.
@@ -20,12 +21,12 @@ import java.util.List;
 public interface RelationConstantContainer<L, R> extends ConstantContainer<L> {
 
     /**
-     * Get relations by constant key value.
+     * Get relation constant by key value.
      *
-     * @param keyValue key value.
-     * @return collection of relation as constants.
+     * @param keyValue key value
+     * @return relation constant
      */
-    Collection<Constant<R>> getRelations(L keyValue);
+    Optional<RelationConstant<L, R>> getRelation(L keyValue);
 
     /**
      * Get all relations of the container.

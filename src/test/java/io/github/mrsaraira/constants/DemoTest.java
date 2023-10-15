@@ -8,7 +8,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class DemoTest {
 
@@ -16,7 +19,7 @@ public class DemoTest {
     void demo() {
         // Demo examples. Just follow :)
 
-        // Anonymous class constant container
+        // Anonymous relation constant container
         var anonymousContainer = new AbstractRelationConstantContainer<String, Integer>() {
             @Override
             protected List<RelationConstant<String, Integer>> initialConstants() {
@@ -36,28 +39,37 @@ public class DemoTest {
         var constant = keyConstant.get();
         assertEquals(constant.getValue(), "One");
 
-        var relations = anonymousContainer.getRelations("One");
+        var relations = anonymousContainer.getRelation("One");
         assertNotNull(relations);
-        assertEquals(1, relations.size());
-        assertEquals(1, relations.iterator().next().getValue());
+        assertTrue(relations.isPresent());
+        var oneRelation = relations.get();
+        assertEquals("One", oneRelation.getValue());
+        assertEquals("One", oneRelation.getKey().getValue());
+        assertEquals(1, oneRelation.getRelations().size());
+        assertEquals(1, oneRelation.getRelations().iterator().next().getValue());
+        assertTrue(Constants.anyRelation(1, oneRelation)); // same as above statement
 
         /*
-        Constants.getInstance(clazz) does not support anonymous classes, anyway you cannot use the container anywhere
-         beside this method, so it's considered that you have container instance already ☺ -> (var anonymousContainer)
-        var allKeyValues = Constants.getInstance(container.getClass()); // this will throw exception
-        Thus we will use inner class container - DemoRelationContainerWithConstants with same values and relations for the next examples
+        We can get container instance anytime using Constants.getInstance(containerClass).
+        Unfortunately, Constants.getInstance(clazz) does not support anonymous classes, but it's bad because you cannot
+        use the class anywhere beside this method, also you have container instance already ☺ -> (var anonymousContainer)
         */
+        assertThrows(IllegalStateException.class, () -> Constants.getInstance(anonymousContainer.getClass()));
+
+        // We will use inner classes containers for the next examples
         var innerClassContainer = Constants.getInstance(DemoRelationContainerWithStaticFinalFields.class);
+        assertNotNull(innerClassContainer);
 
         // The container instances are cached once and then reused
         assertEquals(innerClassContainer, Constants.getInstance(DemoRelationContainerWithStaticFinalFields.class));
 
-        // Get all the keys of the container. Same as Enum.values()
+        // Get all the keys values of the container. Same as Enum.values()
+        // Set<String> [ "One", "Two", "Three" ]
         var allKeyValues = innerClassContainer.getAllValues();
         assertNotNull(allKeyValues);
         assertTrue(allKeyValues.containsAll(Set.of("One", "Two", "Three")));
 
-        // Get all relation values for each key ordered as in the constant container.
+        // Get all relations values for each key ordered as defined in initialConstants().
         // List<Collection<Integer>> - [ [1], [2], [3], [3,4] ]
         var relationValues = Constants.getInstance(DemoRelationContainerWithStaticFinalFields.class).getAllRelationsValues();
         assertNotNull(relationValues);
@@ -68,13 +80,16 @@ public class DemoTest {
         assertEquals(1, firstCollection.size());
         assertEquals(1, firstCollection.iterator().next());
 
-        // Find last FOUR_FIVE element
-        var lastRelationCollection = relationValues.get(relationValues.size() - 1);
-        assertTrue(lastRelationCollection.containsAll(List.of(4, 5)));
+        // Last element "FOUR_FIVE"
+        assertTrue(relationValues.get(relationValues.size() - 1).containsAll(List.of(4, 5)));
 
-        // Check if any relation in the container
+        // Check if value exist in the containers relation values
         assertTrue(Constants.anyRelation(3, innerClassContainer));
-        assertFalse(Constants.anyRelation(10, Constants.getInstance(innerClassContainer.getClass())));
+        // Check if value exist in the relations of some key
+        var optionalTwoRelation = innerClassContainer.getRelation("Two");
+        assertTrue(optionalTwoRelation.isPresent());
+        assertEquals("Two", optionalTwoRelation.get().getValue());
+        assertTrue(Constants.anyRelation(2, optionalTwoRelation.get()));
 
         // Check if any value in the container
         assertTrue(Constants.anyValue("Three", Constants.getInstance(DemoConstantContainer.class))); // constant container

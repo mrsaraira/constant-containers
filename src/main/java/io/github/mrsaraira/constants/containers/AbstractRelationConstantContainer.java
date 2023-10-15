@@ -6,6 +6,7 @@ import io.github.mrsaraira.constants.RelationConstant;
 import io.github.mrsaraira.constants.RelationConstantContainer;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -26,13 +27,13 @@ import java.util.stream.Collectors;
  */
 public abstract class AbstractRelationConstantContainer<L, R> implements RelationConstantContainer<L, R> {
 
-    protected final Map<Constant<L>, Collection<Constant<R>>> constantsMap;
+    protected final Map<Constant<L>, RelationConstant<L, R>> constantsMap;
 
     protected AbstractRelationConstantContainer() {
         var constantsMap =
                 initialConstants()
                         .stream()
-                        .collect(Collectors.toMap(RelationConstant::getKey, RelationConstant::getRelations,
+                        .collect(Collectors.toMap(RelationConstant::getKey, Function.identity(),
                                 (constants, constants2) -> {
                                     throw new IllegalArgumentException("Duplicated keys were found");
                                 },
@@ -58,13 +59,13 @@ public abstract class AbstractRelationConstantContainer<L, R> implements Relatio
     }
 
     @Override
-    public final Collection<Constant<R>> getRelations(L keyValue) {
-        return constantsMap.get(Constants.of(keyValue));
+    public final Optional<RelationConstant<L, R>> getRelation(L keyValue) {
+        return Optional.ofNullable(constantsMap.get(Constants.of(keyValue)));
     }
 
     @Override
     public final Collection<RelationConstant<L, R>> getRelations() {
-        return initialConstants();
+        return constantsMap.values();
     }
 
     @Override
