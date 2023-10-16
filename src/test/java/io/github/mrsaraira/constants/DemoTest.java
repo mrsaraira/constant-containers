@@ -135,6 +135,9 @@ public class DemoTest {
         assertThrows(IllegalStateException.class, () -> Constants.getInstance(WrongDemoRelationContainerWithDuplicatedKeys.class));
         // Duplicated keys in constant container works fine
         assertEquals(2, Constants.getInstance(DemoConstantContainerWithDuplicatedKeys.class).getKeys().size());
+
+        // These are very simple examples of what can be done with Constants
+        // Thanks for your attention :)
     }
 
 
