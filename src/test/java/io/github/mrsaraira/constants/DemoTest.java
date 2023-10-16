@@ -119,8 +119,8 @@ public class DemoTest {
         // Operations on the constants themselves
         var oneKey = DemoRelationContainerWithStaticFinalFields.ONE.getKey();
         assertEquals(Constants.of("One"), oneKey);
-        var oneValue = DemoRelationContainerWithStaticFinalFields.ONE.getKey().getValue();
-        assertEquals("One", oneValue);
+        assertEquals("One",DemoRelationContainerWithStaticFinalFields.ONE.getValue());
+        assertEquals("One", DemoRelationContainerWithStaticFinalFields.ONE.getKey().getValue());
         var oneRelations = DemoRelationContainerWithStaticFinalFields.ONE.getRelations();
         assertEquals(1, oneRelations.size());
         assertTrue(Constants.anyValue(1, oneRelations));
