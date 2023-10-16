@@ -10,7 +10,7 @@ Please check `DemoTest.java` for examples for now until I find time to update th
 
 ### Getting Started:
 
-1. Add constants-containers library dependency to your project. The latest version is **1.0.0**.
+1. Add constants-containers library dependency to your project. The latest version is **1.1.0**.
 
 Maven:
 ```xml
@@ -24,7 +24,7 @@ Maven:
 Gradle:
 ```
 dependencies {
-    implementation 'io.github.mrsaraira:constant-containers:1.0.0'
+    implementation 'io.github.mrsaraira:constant-containers:1.1.0'
 }
 ```
 
