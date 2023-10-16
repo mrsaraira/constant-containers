@@ -33,7 +33,6 @@ test {
 
 signing {
     required { gradle.taskGraph.hasTask("generateMetadataFileForMavenPublication") }
-
     sign publishing.publications
 }
 
@@ -53,7 +52,7 @@ publishing {
                 licenses {
                     license {
                         name = 'MIT License'
-                        url = 'https://opensource.org/license/mit/'
+                        url = 'https://raw.githubusercontent.com/mrsaraira/constant-containers/main/LICENSE'
                     }
                 }
                 developers {
