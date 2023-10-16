@@ -36,7 +36,7 @@ repositories {
     maven { url "https://s01.oss.sonatype.org/content/repositories/releases" }
 }
 dependencies {
-    implementation 'io.github.mrsaraira:temporary-resources:1.1.0'
+    implementation 'io.github.mrsaraira:constant-containers:1.0.0'
 }
 ```
 
