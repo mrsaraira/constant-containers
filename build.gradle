@@ -1,6 +1,7 @@
 plugins {
     id 'java-library'
     id 'maven-publish'
+    id 'signing'
 }
 
 group = 'io.github.mrsaraira'
@@ -28,6 +29,12 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+signing {
+    required { gradle.taskGraph.hasTask("generateMetadataFileForMavenPublication") }
+
+    sign publishing.publications
 }
 
 publishing {
