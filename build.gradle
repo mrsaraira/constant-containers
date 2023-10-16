@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'io.github.mrsaraira'
-version = '1.0.0'
+version = '1.1.0'
 
 java {
     sourceCompatibility = JavaVersion.VERSION_11
@@ -46,7 +46,7 @@ publishing {
 
             pom {
                 name = 'constant-containers'
-                description = 'Flexible generic data structure for storing immutable constant values'
+                description = 'Flexible generic data structure for storing immutable constant values and supports complex relations'
                 url = 'https://github.com/mrsaraira/constant-containers.git'
 
                 licenses {

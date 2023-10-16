@@ -51,6 +51,7 @@ public final class Constants {
      * Create a {@link RelationConstant} with its relations stored in supplied collection.
      *
      * @param value          key value
+     * @param collectionSupplier collection supplier
      * @param relationValues relation values
      * @param <L>            value type
      * @param <R>            relation values type
@@ -66,8 +67,9 @@ public final class Constants {
     }
 
     /**
-     * Concatenate constant values to array.
+     * Concatenate values to array of constants.
      *
+     * @param values constant values
      * @param <T> values type
      * @return constants array
      */
@@ -82,6 +84,7 @@ public final class Constants {
     /**
      * Concatenate relation constants to array.
      *
+     * @param relationConstants relation constants
      * @param <V> constant value type
      * @param <R> relation constants value type
      * @param <C> array of relation constants
@@ -151,6 +154,7 @@ public final class Constants {
      * @param value      value to match
      * @param containers containers to match
      * @param <T>        values type
+     * @param <C>        constant container with constant values type T
      * @return true - if any container has a constant value equal to value parameter
      */
     @SafeVarargs
