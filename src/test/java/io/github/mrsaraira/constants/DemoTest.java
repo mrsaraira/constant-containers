@@ -47,12 +47,12 @@ public class DemoTest {
         assertEquals("One", oneRelation.getKey().getValue());
         assertEquals(1, oneRelation.getRelations().size());
         assertEquals(1, oneRelation.getRelations().iterator().next().getValue());
-        assertTrue(Constants.anyRelation(1, oneRelation)); // same as above check
+        assertTrue(Constants.anyRelationValue(1, oneRelation)); // same as above statement
 
         /*
         We can get container instance anytime using Constants.getInstance(containerClass).
-        Unfortunately, Constants.getInstance(clazz) does not support anonymous classes, but it's not bad because you cannot
-        use the class anywhere beside this method, also you have container instance already ☺ -> (var anonymousContainer)
+        Unfortunately, Constants.getInstance(clazz) does not support anonymous classes, but it's bad because you cannot
+        use the anonymous class anywhere beside this method, also you have container instance already ☺ -> (var anonymousContainer)
         */
         assertThrows(IllegalStateException.class, () -> Constants.getInstance(anonymousContainer.getClass()));
 
@@ -84,12 +84,12 @@ public class DemoTest {
         assertTrue(relationValues.get(relationValues.size() - 1).containsAll(List.of(4, 5)));
 
         // Check if value exist in the containers relation values
-        assertTrue(Constants.anyRelation(3, innerClassContainer));
+        assertTrue(Constants.anyRelationValue(3, innerClassContainer));
         // Check if value exist in the relations of some key
         var optionalTwoRelation = innerClassContainer.getRelation("Two");
         assertTrue(optionalTwoRelation.isPresent());
         assertEquals("Two", optionalTwoRelation.get().getValue());
-        assertTrue(Constants.anyRelation(2, optionalTwoRelation.get()));
+        assertTrue(Constants.anyRelationValue(2, optionalTwoRelation.get()));
 
         // Check if any value in the container
         assertTrue(Constants.anyValue("Three", Constants.getInstance(DemoConstantContainer.class))); // constant container
@@ -99,12 +99,12 @@ public class DemoTest {
         assertTrue(Constants.anyValue("One", DemoRelationContainerWithStaticFinalFields.ONE, DemoRelationContainerWithStaticFinalFields.TWO, DemoRelationContainerWithStaticFinalFields.THREE));
 
         // Check any relation by static references of the constants
-        assertTrue(Constants.anyRelation(1, DemoRelationContainerWithStaticFinalFields.ONE, DemoRelationContainerWithStaticFinalFields.TWO, DemoRelationContainerWithStaticFinalFields.THREE));
+        assertTrue(Constants.anyRelationValue(1, DemoRelationContainerWithStaticFinalFields.ONE, DemoRelationContainerWithStaticFinalFields.TWO, DemoRelationContainerWithStaticFinalFields.THREE));
         // Check any value by container local refs
         var containerWithFields = Constants.getInstance(DemoContainerWithStaticFields.class);
         assertTrue(Constants.anyValue("One", DemoContainerWithStaticFields.ONE, DemoContainerWithStaticFields.TWO, DemoContainerWithStaticFields.THREE));
 
-        // Get optional constant by value
+        // Get optional constant value by value
         var one = Constants.getKeyValue("One", DemoRelationContainerWithStaticFinalFields.class);
         assertTrue(one.isPresent());
         assertEquals(one.get(), DemoRelationContainerWithStaticFinalFields.ONE.getValue());

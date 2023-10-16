@@ -171,7 +171,7 @@ public final class Constants {
      * @return true - if any constant has a relation constant value equal to value parameter
      */
     @SafeVarargs
-    public static <R, C extends RelationConstant<?, R>> boolean anyRelation(R value, @NonNull C... constants) {
+    public static <R, C extends RelationConstant<?, R>> boolean anyRelationValue(R value, @NonNull C... constants) {
         return Stream.of(constants).anyMatch(constant -> getRelationValues(constant).contains(value));
     }
 
@@ -185,7 +185,7 @@ public final class Constants {
      * @return true - if any container has a constant value equal to value parameter
      */
     @SafeVarargs
-    public static <R, C extends RelationConstantContainer<?, R>> boolean anyRelation(R value, @NonNull C... containers) {
+    public static <R, C extends RelationConstantContainer<?, R>> boolean anyRelationValue(R value, @NonNull C... containers) {
         return Stream.of(containers)
                 .map(container -> container.getAllRelationsValues())
                 .flatMap(Collection::stream)
