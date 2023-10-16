@@ -29,3 +29,59 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'io.github.mrsaraira'
+            artifactId = 'constant-containers'
+
+            from components.java
+
+            pom {
+                name = 'constant-containers'
+                description = 'A flexible containers for storing constant data'
+                url = 'https://github.com/mrsaraira/constant-containers.git'
+
+                licenses {
+                    license {
+                        name = 'MIT License'
+                        url = 'https://opensource.org/license/mit/'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'tsaraira'
+                        name = 'Takhsin Saraira'
+                        email = 'mrsarayra@gmail.com'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git://github.com/mrsaraira/constant-containers.git'
+                    developerConnection = 'scm:git:ssh://github.com/mrsaraira/constant-containers.git'
+                    url = 'https://github.com/mrsaraira'
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            name = 'release'
+            url = 'https://s01.oss.sonatype.org/content/repositories/releases'
+
+            credentials {
+                username mavenUsername
+                password mavenPassword
+            }
+        }
+        maven {
+            name = 'snapshot'
+            url = 'https://s01.oss.sonatype.org/content/repositories/snapshots'
+
+            credentials {
+                username mavenUsername
+                password mavenPassword
+            }
+        }
+    }
+}
