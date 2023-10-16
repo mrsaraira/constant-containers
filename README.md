@@ -10,31 +10,19 @@ Please check `DemoTest.java` for examples for now until I find time to update th
 
 ### Getting Started:
 
-Final documentation and README need to be updated then it will be published on Maven Central. 
-Right now you can clone this library or add it to your dependencies.
-
 1. Add constants-containers library dependency to your project. The latest version is **1.0.0**.
 
 Maven:
 ```xml
-<repository>
-    <id>sonatype-releases</id>
-    <name>Sonatype releases</name>
-    <url>https://s01.oss.sonatype.org/content/repositories/releases</url>
-</repository>
-
 <dependency>
     <groupId>io.github.mrsaraira</groupId>
     <artifactId>constant-containers</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
 </dependency>
 ```
 
 Gradle:
 ```
-repositories {
-    maven { url "https://s01.oss.sonatype.org/content/repositories/releases" }
-}
 dependencies {
     implementation 'io.github.mrsaraira:constant-containers:1.0.0'
 }
