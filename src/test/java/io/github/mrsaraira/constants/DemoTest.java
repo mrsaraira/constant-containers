@@ -100,9 +100,11 @@ public class DemoTest {
 
         // Check any relation by static references of the constants
         assertTrue(Constants.anyRelationValue(1, DemoRelationContainerWithStaticFinalFields.ONE, DemoRelationContainerWithStaticFinalFields.TWO, DemoRelationContainerWithStaticFinalFields.THREE));
-        // Check any value by container local refs
+        // Check any value by container constants references
         var containerWithFields = Constants.getInstance(DemoContainerWithStaticFields.class);
         assertTrue(Constants.anyValue("One", DemoContainerWithStaticFields.ONE, DemoContainerWithStaticFields.TWO, DemoContainerWithStaticFields.THREE));
+        // Check any value by combining different constants from different containers as long they have same generic value type
+        assertTrue(Constants.anyValue("One", DemoContainerWithStaticFields.ONE, DemoRelationContainerWithStaticFinalFields.ONE.getKey()));
 
         // Get optional constant value by value
         var one = Constants.getKeyValue("One", DemoRelationContainerWithStaticFinalFields.class);
@@ -158,7 +160,6 @@ public class DemoTest {
 
     private static class DemoContainerWithStaticFields extends AbstractConstantContainer<String> {
 
-        // local variables
         public static Constant<String> ONE = Constants.of("One");
         public static Constant<String> TWO = Constants.of("Two");
         public static Constant<String> THREE = Constants.of("Three");
@@ -177,7 +178,6 @@ public class DemoTest {
 
     private static class DemoRelationContainerWithStaticFinalFields extends AbstractRelationConstantContainer<String, Integer> {
 
-        // static references
         public static final RelationConstant<String, Integer> ONE = Constants.of("One", 1);
         public static final RelationConstant<String, Integer> TWO = Constants.of("Two", 2);
         public static final RelationConstant<String, Integer> THREE = Constants.of("Three", 3);
@@ -210,7 +210,7 @@ public class DemoTest {
 
     }
 
-    // however this container will work, because values are initiated and not the constants in the local fields.
+    // However this container will work, because values are initiated and not the constants in the local fields.
     // But this container is not as useful as other containers.
     private static class DemoContainerWithNonStaticValuesFields extends AbstractConstantContainer<String> {
 
