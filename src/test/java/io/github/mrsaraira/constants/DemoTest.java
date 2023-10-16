@@ -51,7 +51,7 @@ public class DemoTest {
 
         /*
         We can get container instance anytime using Constants.getInstance(containerClass).
-        Unfortunately, Constants.getInstance(clazz) does not support anonymous classes, but it's bad because you cannot
+        Unfortunately, Constants.getInstance(clazz) does not support anonymous classes, but it's not bad because you cannot
         use the anonymous class anywhere beside this method, also you have container instance already ☺ -> (var anonymousContainer)
         */
         assertThrows(IllegalStateException.class, () -> Constants.getInstance(anonymousContainer.getClass()));
