@@ -46,7 +46,7 @@ publishing {
 
             pom {
                 name = 'constant-containers'
-                description = 'A flexible containers for storing constant data'
+                description = 'Flexible generic data structure for storing immutable constant values'
                 url = 'https://github.com/mrsaraira/constant-containers.git'
 
                 licenses {
