@@ -57,7 +57,7 @@ public class DemoTest {
         // Match by relation value
         assertTrue(Constants.anyRelationValue(5, DemoEnumRelationConstantContainer.THREE, DemoEnumRelationConstantContainer.FOUR_FIVE));
         assertFalse(Constants.anyRelationValue(2, DemoEnumRelationConstantContainer.ONE, DemoEnumRelationConstantContainer.THREE));
-2
+
         // Other operations
         var twoRelationConstant = DemoEnumRelationConstantContainer.TWO.getConstant();
         assertEquals("Two", twoRelationConstant.getValue());
