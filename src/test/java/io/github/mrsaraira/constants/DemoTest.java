@@ -23,7 +23,7 @@ public class DemoTest {
         ONE(Constants.of(1)),
         TWO(Constants.of(2)),
         THREE(Constants.of(3)),
-        FOUR(Constants.of(4, 5));
+        FOUR(Constants.of(4));
 
         private final Constant<Integer> constant;
     }
