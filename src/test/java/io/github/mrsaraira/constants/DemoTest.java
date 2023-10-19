@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 
@@ -50,6 +49,7 @@ public class DemoTest {
         assertTrue(Constants.anyValue(2, DemoEnumConstantContainer.TWO));
         assertTrue(Constants.anyValue(2, DemoEnumConstantContainer.ONE, DemoEnumConstantContainer.TWO));
         assertFalse(Constants.anyValue(5, DemoEnumConstantContainer.THREE, DemoEnumConstantContainer.FOUR));
+
         // match by value for relation containers
         assertTrue(Constants.anyValue("Three", DemoEnumRelationConstantContainer.THREE, DemoEnumRelationConstantContainer.FOUR_FIVE));
         assertFalse(Constants.anyValue("Seven", DemoEnumRelationConstantContainer.ONE, DemoEnumRelationConstantContainer.TWO));
@@ -65,10 +65,12 @@ public class DemoTest {
         assertEquals(1, twoRelationConstant.getRelations().length);
         assertEquals(2, twoRelationConstant.getRelations()[0].getValue());
 
+        // Get enum by value
         var optionalTwoEnum = Constants.getEnumByValue("Two", DemoEnumRelationConstantContainer.class);
         assertTrue(optionalTwoEnum.isPresent());
         assertEquals(DemoEnumRelationConstantContainer.TWO, optionalTwoEnum.get());
 
+        // get relation constant with relation value
         var optionalFourFiveConstant = Constants.match(5, DemoEnumRelationConstantContainer.FOUR_FIVE);
         assertTrue(optionalFourFiveConstant.isPresent());
         assertEquals(DemoEnumRelationConstantContainer.FOUR_FIVE, optionalFourFiveConstant.get());
@@ -166,6 +168,7 @@ public class DemoTest {
         assertTrue(Constants.anyRelationValue(1, DemoRelationContainerWithStaticFinalFields.ONE, DemoRelationContainerWithStaticFinalFields.TWO, DemoRelationContainerWithStaticFinalFields.THREE));
         // Check any value by container constants references
         var containerWithFields = Constants.getInstance(DemoContainerWithStaticFields.class);
+        assertNotNull(containerWithFields);
         assertTrue(Constants.anyValue("One", DemoContainerWithStaticFields.ONE, DemoContainerWithStaticFields.TWO, DemoContainerWithStaticFields.THREE));
         // Check any value by combining different constants from different containers as long they have same generic value type
         assertTrue(Constants.anyValue("One", DemoContainerWithStaticFields.ONE, DemoRelationContainerWithStaticFinalFields.ONE.getKey()));
