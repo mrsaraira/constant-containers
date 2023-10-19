@@ -1,7 +1,5 @@
 package io.github.mrsaraira.constants;
 
-import java.util.Collection;
-
 /**
  * A constant that contains a key and its relations.
  *
@@ -26,6 +24,6 @@ public interface RelationConstant<L, R> extends Constant<L> {
      *
      * @return constant relations
      */
-    Collection<Constant<R>> getRelations();
+    Constant<R>[] getRelations();
 
 }

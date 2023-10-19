@@ -1,6 +1,9 @@
 package io.github.mrsaraira.constants;
 
-import lombok.Value;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 import java.util.Collection;
 
@@ -13,15 +16,24 @@ import java.util.Collection;
  * @param <R> relations type
  * @author Takhsin Saraira
  */
-@Value
+@ToString
+@EqualsAndHashCode
+@RequiredArgsConstructor
 class RelationConstantImpl<L, R> implements RelationConstant<L, R> {
 
-    Constant<L> key;
-    Collection<Constant<R>> relations;
+    @Getter
+    private final Constant<L> key;
+    private final Collection<Constant<R>> relations;
 
     @Override
     public L getValue() {
         return getKey().getValue();
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public Constant<R>[] getRelations() {
+        return Constants.toArray(relations, new Constant[0]);
     }
 
 }

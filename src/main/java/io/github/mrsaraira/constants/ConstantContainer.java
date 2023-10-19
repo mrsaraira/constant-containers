@@ -3,7 +3,6 @@ package io.github.mrsaraira.constants;
 import io.github.mrsaraira.constants.containers.AbstractConstantContainer;
 
 import java.util.Collection;
-import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -20,19 +19,11 @@ import java.util.Set;
 public interface ConstantContainer<T> {
 
     /**
-     * Get constant key by value.
-     *
-     * @param value contained key value
-     * @return constant optional
-     */
-    Optional<Constant<T>> getKey(T value);
-
-    /**
      * Get constant keys.
      *
      * @return constant keys
      */
-    Collection<Constant<T>> getKeys();
+    Collection<Constant<T>> getAllKeys();
 
     /**
      * Get all values of the container.

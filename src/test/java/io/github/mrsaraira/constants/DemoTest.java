@@ -2,23 +2,88 @@ package io.github.mrsaraira.constants;
 
 import io.github.mrsaraira.constants.containers.AbstractConstantContainer;
 import io.github.mrsaraira.constants.containers.AbstractRelationConstantContainer;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class DemoTest {
 
+    // Demo examples. Just follow :)
+
+    // ------------------ 💎Enum containers💎 ------------------ //
+    @RequiredArgsConstructor
+    @Getter
+    private enum DemoEnumConstantContainer implements EnumConstantContainer<Integer, DemoEnumConstantContainer> {
+        ONE(Constants.of(1)),
+        TWO(Constants.of(2)),
+        THREE(Constants.of(3)),
+        FOUR(Constants.of(4, 5));
+
+        private final Constant<Integer> constant;
+    }
+
+    @RequiredArgsConstructor
+    @Getter
+    private enum DemoEnumRelationConstantContainer implements EnumRelationConstantContainer<String, Integer, DemoEnumRelationConstantContainer> {
+        ONE(Constants.of("One", 1)),
+        TWO(Constants.of("Two", 2)),
+        THREE(Constants.of("Three", 3)),
+        FOUR_FIVE(Constants.of("Four-five", 4, 5));
+
+        private final RelationConstant<String, Integer> constant;
+    }
+
+    @Test
+    void enumContainersDemo() {
+        // Enum constant containers
+        assertNotNull(DemoEnumConstantContainer.TWO.getConstant());
+        assertEquals(2, DemoEnumConstantContainer.TWO.getConstant().getValue());
+
+        // match by constant values
+        assertTrue(Constants.anyValue(2, DemoEnumConstantContainer.TWO));
+        assertTrue(Constants.anyValue(2, DemoEnumConstantContainer.ONE, DemoEnumConstantContainer.TWO));
+        assertFalse(Constants.anyValue(5, DemoEnumConstantContainer.THREE, DemoEnumConstantContainer.FOUR));
+        // match by value for relation containers
+        assertTrue(Constants.anyValue("Three", DemoEnumRelationConstantContainer.THREE, DemoEnumRelationConstantContainer.FOUR_FIVE));
+        assertFalse(Constants.anyValue("Seven", DemoEnumRelationConstantContainer.ONE, DemoEnumRelationConstantContainer.TWO));
+
+        // Match by relation value
+        assertTrue(Constants.anyRelationValue(5, DemoEnumRelationConstantContainer.THREE, DemoEnumRelationConstantContainer.FOUR_FIVE));
+        assertFalse(Constants.anyRelationValue(2, DemoEnumRelationConstantContainer.ONE, DemoEnumRelationConstantContainer.TWO));
+
+        // Other operations
+        var twoRelationConstant = DemoEnumRelationConstantContainer.TWO.getConstant();
+        assertEquals("Two", twoRelationConstant.getValue());
+        assertEquals("Two", twoRelationConstant.getKey().getValue());
+        assertEquals(1, twoRelationConstant.getRelations().length);
+        assertEquals(2, twoRelationConstant.getRelations()[0].getValue());
+
+        var optionalTwoEnum = Constants.getEnumByValue("Two", DemoEnumRelationConstantContainer.class);
+        assertTrue(optionalTwoEnum.isPresent());
+        assertEquals(DemoEnumRelationConstantContainer.TWO, optionalTwoEnum.get());
+
+        var optionalFourFiveConstant = Constants.match(5, DemoEnumRelationConstantContainer.FOUR_FIVE);
+        assertTrue(optionalFourFiveConstant.isPresent());
+        assertEquals(DemoEnumRelationConstantContainer.FOUR_FIVE, optionalFourFiveConstant.get());
+        assertEquals(DemoEnumRelationConstantContainer.FOUR_FIVE.getRelationValues(), optionalFourFiveConstant.get().getRelationValues());
+
+        var constantWithRelationValueFive = Constants.match(5, DemoEnumRelationConstantContainer.FOUR_FIVE.getConstant().getRelations());
+        assertTrue(constantWithRelationValueFive.isPresent());
+        assertEquals(5, constantWithRelationValueFive.get().getValue());
+
+        // Of course, you cannot get Enum class instance using Constants.getInstance(enumClass)
+        assertThrows(IllegalStateException.class, () -> Constants.getInstance(DemoEnumConstantContainer.class));
+    }
+
     @Test
     void demo() {
-        // Demo examples. Just follow :)
-
         // Anonymous relation constant container
         var anonymousContainer = new AbstractRelationConstantContainer<String, Integer>() {
             @Override
@@ -32,21 +97,20 @@ public class DemoTest {
             }
         };
 
-        var keyConstant = anonymousContainer.getKey("One");
+        var keyConstant = Constants.match("One", anonymousContainer);
         assertNotNull(keyConstant);
         assertTrue(keyConstant.isPresent());
 
         var constant = keyConstant.get();
         assertEquals(constant.getValue(), "One");
 
-        var relations = anonymousContainer.getRelation("One");
+        var relations = Constants.getRelationByKeyValue("One", anonymousContainer.getAllRelations());
         assertNotNull(relations);
         assertTrue(relations.isPresent());
         var oneRelation = relations.get();
         assertEquals("One", oneRelation.getValue());
         assertEquals("One", oneRelation.getKey().getValue());
-        assertEquals(1, oneRelation.getRelations().size());
-        assertEquals(1, oneRelation.getRelations().iterator().next().getValue());
+        assertEquals(1, oneRelation.getRelations().length);
         assertTrue(Constants.anyRelationValue(1, oneRelation)); // same as above statement
 
         /*
@@ -86,7 +150,7 @@ public class DemoTest {
         // Check if value exist in the containers relation values
         assertTrue(Constants.anyRelationValue(3, innerClassContainer));
         // Check if value exist in the relations of some key
-        var optionalTwoRelation = innerClassContainer.getRelation("Two");
+        var optionalTwoRelation = Constants.getRelationByKeyValue("Two", innerClassContainer.getAllRelations());
         assertTrue(optionalTwoRelation.isPresent());
         assertEquals("Two", optionalTwoRelation.get().getValue());
         assertTrue(Constants.anyRelationValue(2, optionalTwoRelation.get()));
@@ -119,10 +183,10 @@ public class DemoTest {
         // Operations on the constants themselves
         var oneKey = DemoRelationContainerWithStaticFinalFields.ONE.getKey();
         assertEquals(Constants.of("One"), oneKey);
-        assertEquals("One",DemoRelationContainerWithStaticFinalFields.ONE.getValue());
+        assertEquals("One", DemoRelationContainerWithStaticFinalFields.ONE.getValue());
         assertEquals("One", DemoRelationContainerWithStaticFinalFields.ONE.getKey().getValue());
         var oneRelations = DemoRelationContainerWithStaticFinalFields.ONE.getRelations();
-        assertEquals(1, oneRelations.size());
+        assertEquals(1, oneRelations.length);
         assertTrue(Constants.anyValue(1, oneRelations));
 
         // Negative tests on wrong examples and fine ones
@@ -136,14 +200,14 @@ public class DemoTest {
         // Duplicated keys in relation constant container exception example
         assertThrows(IllegalStateException.class, () -> Constants.getInstance(WrongDemoRelationContainerWithDuplicatedKeys.class));
         // Duplicated keys in constant container works fine
-        assertEquals(2, Constants.getInstance(DemoConstantContainerWithDuplicatedKeys.class).getKeys().size());
+        assertEquals(2, Constants.getInstance(DemoConstantContainerWithDuplicatedKeys.class).getAllKeys().size());
 
         // These are very simple examples of what can be done with Constants
         // Thanks for your attention :)
     }
 
 
-    // ------------------ Demo constant containers ------------------ //
+    // ------------------ Other demo constant containers ------------------ //
 
     private static class DemoConstantContainer extends AbstractConstantContainer<String> {
 
