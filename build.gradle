@@ -23,6 +23,8 @@ dependencies {
     compileOnly "org.projectlombok:lombok:$LIB_LOMBOK_VERSION"
     annotationProcessor "org.projectlombok:lombok:$LIB_LOMBOK_VERSION"
 
+    testCompileOnly "org.projectlombok:lombok:$LIB_LOMBOK_VERSION"
+    testAnnotationProcessor "org.projectlombok:lombok:$LIB_LOMBOK_VERSION"
     testImplementation platform("org.junit:junit-bom:$LIB_JUNIT_BOM")
     testImplementation 'org.junit.jupiter:junit-jupiter'
 }

@@ -34,12 +34,7 @@ public abstract class AbstractConstantContainer<T> implements ConstantContainer<
     protected abstract List<Constant<T>> initialConstants();
 
     @Override
-    public final Optional<Constant<T>> getKey(T value) {
-        return constants.stream().filter(constant -> Objects.equals(constant.getValue(), value)).findFirst();
-    }
-
-    @Override
-    public final Collection<Constant<T>> getKeys() {
+    public final Collection<Constant<T>> getAllKeys() {
         return constants;
     }
 

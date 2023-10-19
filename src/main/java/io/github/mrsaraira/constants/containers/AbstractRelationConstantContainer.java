@@ -1,7 +1,6 @@
 package io.github.mrsaraira.constants.containers;
 
 import io.github.mrsaraira.constants.Constant;
-import io.github.mrsaraira.constants.Constants;
 import io.github.mrsaraira.constants.RelationConstant;
 import io.github.mrsaraira.constants.RelationConstantContainer;
 
@@ -49,22 +48,12 @@ public abstract class AbstractRelationConstantContainer<L, R> implements Relatio
     protected abstract List<RelationConstant<L, R>> initialConstants();
 
     @Override
-    public final Optional<Constant<L>> getKey(L value) {
-        return getKeys().stream().filter(constant -> Objects.equals(constant.getValue(), value)).findFirst();
-    }
-
-    @Override
-    public final Collection<Constant<L>> getKeys() {
+    public final Collection<Constant<L>> getAllKeys() {
         return constantsMap.keySet();
     }
 
     @Override
-    public final Optional<RelationConstant<L, R>> getRelation(L keyValue) {
-        return Optional.ofNullable(constantsMap.get(Constants.of(keyValue)));
-    }
-
-    @Override
-    public final Collection<RelationConstant<L, R>> getRelations() {
+    public final Collection<RelationConstant<L, R>> getAllRelations() {
         return constantsMap.values();
     }
 
