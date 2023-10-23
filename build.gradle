@@ -20,17 +20,22 @@ repositories {
 }
 
 dependencies {
-    compileOnly "org.projectlombok:lombok:$LIB_LOMBOK_VERSION"
-    annotationProcessor "org.projectlombok:lombok:$LIB_LOMBOK_VERSION"
+    compileOnly libs.lombok
+    annotationProcessor libs.lombok
 
-    testCompileOnly "org.projectlombok:lombok:$LIB_LOMBOK_VERSION"
-    testAnnotationProcessor "org.projectlombok:lombok:$LIB_LOMBOK_VERSION"
-    testImplementation platform("org.junit:junit-bom:$LIB_JUNIT_BOM")
-    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testCompileOnly libs.lombok
+    testAnnotationProcessor libs.lombok
+
+    testImplementation platform(libs.junit.bom)
+    testImplementation libs.junit
 }
 
-test {
-    useJUnitPlatform()
+testing {
+    suites {
+        test {
+            useJUnitJupiter()
+        }
+    }
 }
 
 signing {

@@ -1,0 +1,13 @@
+[versions]
+lombok="1.18.30"
+junit-bom="5.9.1"
+
+[libraries]
+lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
+junit-bom = { module = "org.junit:junit-bom", version.ref = "junit-bom" }
+junit = { module = "org.junit.jupiter:junit-jupiter" }
+
+[plugins]
+# example
+# spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
+# usage: alias(libs.plugins.spring.boot)
