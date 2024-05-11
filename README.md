@@ -3,11 +3,7 @@
 
 Flexible generic data structure for storing immutable constant values can enhance enums for more complex usages.
 
-The constant-containers library appears to offer a robust mechanism for defining and working with immutable, constant values in a type-safe way. This library enhances the capabilities of enums and enum-like structures allowing for more complex relationships and operations.
-
-The idea is to have enum and enum-like containers to store constants but with a more flexible data structure and operations on the containers and the stored constants. 
-For example, you might want to have one-to-many data relations between the constants, or one-many-one or you could have a simple (one-to-one) enumeration and a single powerful util to operate the containers and constants.
-
+The constant-containers library offers a robust mechanism for defining and working with immutable, constant values in a type-safe way. This library enhances the capabilities of enums and enum-like structures allowing for more complex relationships and operations.
 
 ### Functionality:
 - Enum and Enum-like Containers: Supports enum and enum-like structures to hold constants, improving upon traditional enums by allowing more complex data structures and relationships.
