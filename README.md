@@ -17,21 +17,21 @@ The constant-containers library offers a robust mechanism for defining and worki
 
 #### Add the dependency
 
-Add constants-containers library dependency to your project. The latest version is **2.0.0**.
+Add constants-containers library dependency to your project. The latest version is **1.2.0**.
 
 Maven:
 ```xml
 <dependency>
     <groupId>io.github.mrsaraira</groupId>
     <artifactId>constant-containers</artifactId>
-    <version>2.0.0</version>
+    <version>1.2.0</version>
 </dependency>
 ```
 
 Gradle:
 ```
 dependencies {
-    implementation 'io.github.mrsaraira:constant-containers:2.0.0'
+    implementation 'io.github.mrsaraira:constant-containers:1.2.0'
 }
 ```
 ### Example Using Enums
@@ -89,7 +89,7 @@ This example demonstrates how constant-containers can be used to model complex r
 Check DemoTest test class for more examples.
 
 ### Limitations:
-- Exception Handling: Some operations, like attempting to retrieve an instance of an enum class via Constants.getInstance(), will throw an IllegalStateException (you should use getEnumByValue instead), indicating certain limitations in dynamic instantiation or reflection capabilities.
-- No Support for Anonymous Classes in getInstance: The utility method getInstance does not support anonymous classes, which could limit its usage in certain dynamic scenarios.
-- Static Requirement for Constants: There's a requirement for constants to be static when used within certain container implementations, which may not always be desirable or intuitive.
+- Exception Handling: Some operations, like attempting to retrieve an instance of an enum class via Constants.getInstance(), will throw an IllegalStateException (you should use getEnumByValue instead).
+- No Support for Anonymous Classes in getInstance: The utility method getInstance does not support anonymous classes.
 - Runtime Exceptions for Duplicate Keys: Containers with duplicated keys may lead to runtime exceptions, requiring careful structuring of constants to avoid such issues.
+- Static Requirement for Constants: There's a requirement for constants to be static when used within certain container implementations (edge cases where not enum is used).

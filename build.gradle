@@ -5,11 +5,11 @@ plugins {
 }
 
 group = 'io.github.mrsaraira'
-version = '1.1.0'
+version = '1.2.0'
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    sourceCompatibility = JavaVersion.VERSION_23
+    targetCompatibility = JavaVersion.VERSION_23
     withJavadocJar()
     withSourcesJar()
 }
@@ -53,7 +53,7 @@ publishing {
 
             pom {
                 name = 'constant-containers'
-                description = 'Flexible generic data structure for storing immutable constant values and supports complex relations'
+                description = 'Flexible generic data structure for storing immutable constant values, supports complex relations, can extend your enums capabilities'
                 url = 'https://github.com/mrsaraira/constant-containers.git'
 
                 licenses {
@@ -80,7 +80,7 @@ publishing {
     repositories {
         maven {
             name = 'release'
-            url = 'https://s01.oss.sonatype.org/content/repositories/releases'
+            url = 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2'
 
             credentials {
                 username mavenUsername

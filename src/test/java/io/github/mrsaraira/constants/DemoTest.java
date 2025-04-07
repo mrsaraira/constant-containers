@@ -10,7 +10,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class DemoTest {
 
@@ -41,6 +45,21 @@ public class DemoTest {
 
     @Test
     void enumContainersDemo() {
+        // Get key-relations map
+        final var keyRelationsMap = Constants.getKeysRelationsMap(DemoEnumRelationConstantContainer.class);
+        assertEquals(4, keyRelationsMap.size());
+        assertEquals(keyRelationsMap.get("Four-five"), List.of(4,5));
+
+        // Get enum-relations map
+        final var enumRelationsMap = Constants.getEnumRelationsMap(DemoEnumRelationConstantContainer.class);
+        assertEquals(4, enumRelationsMap.size());
+        assertEquals(enumRelationsMap.get(DemoEnumRelationConstantContainer.FOUR_FIVE), List.of(4,5));
+
+        // Get enum-keys map
+        final var enumKeysMap = Constants.getEnumKeysMap(DemoEnumRelationConstantContainer.class);
+        assertEquals(4, enumKeysMap.size());
+        assertEquals("Four-five", enumKeysMap.get(DemoEnumRelationConstantContainer.FOUR_FIVE));
+
         // Enum constant containers
         assertNotNull(DemoEnumConstantContainer.TWO.getConstant());
         assertEquals(2, DemoEnumConstantContainer.TWO.getConstant().getValue());
@@ -104,7 +123,7 @@ public class DemoTest {
         assertTrue(keyConstant.isPresent());
 
         var constant = keyConstant.get();
-        assertEquals(constant.getValue(), "One");
+        assertEquals("One", constant.getValue());
 
         var relations = Constants.getRelationByKeyValue("One", anonymousContainer.getAllRelations());
         assertNotNull(relations);
@@ -142,12 +161,12 @@ public class DemoTest {
         assertEquals(4, relationValues.size()); // 4 items == 4 relation values collections
 
         // Check first relation collection "One"
-        var firstCollection = relationValues.get(0);
+        var firstCollection = relationValues.getFirst();
         assertEquals(1, firstCollection.size());
         assertEquals(1, firstCollection.iterator().next());
 
         // Last element "FOUR_FIVE"
-        assertTrue(relationValues.get(relationValues.size() - 1).containsAll(List.of(4, 5)));
+        assertTrue(relationValues.getLast().containsAll(List.of(4, 5)));
 
         // Check if value exist in the containers relation values
         assertTrue(Constants.anyRelationValue(3, innerClassContainer));

@@ -9,7 +9,6 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-
 /**
  * Utility class to operation on constants and containers.
  *
@@ -249,7 +248,6 @@ public final class Constants {
         return match(value, constant).isPresent();
     }
 
-
     /**
      * Check if any constant container has a constant with value equal to value parameter.
      *
@@ -448,6 +446,72 @@ public final class Constants {
     }
 
     /**
+     * Get map of enum to key of some enum constant container.
+     *
+     * @param enumClass enum constant container class
+     * @return map of enum-key of enumClass parameter
+     */
+    public static <T, E extends Enum<E> & EnumConstantContainer<T, E>> Map<E, T> getEnumKeysMap(Class<E> enumClass) {
+        Map<E, T> keyRelationsMap = new HashMap<>();
+
+        E[] enumConstants = Constants.Inner.getEnumValues(enumClass);
+
+        for (E constant : enumConstants) {
+            T key = constant.getConstant().getValue();
+
+            keyRelationsMap.put(constant, key);
+        }
+
+        return keyRelationsMap;
+    }
+
+    /**
+     * Get map of key to relations of some enum constant container.
+     *
+     * @param enumClass enum constant container class
+     * @return map of key-relations of enumClass
+     */
+    public static <T, R, E extends Enum<E> & EnumRelationConstantContainer<T, R, E>> Map<T, Collection<R>> getKeysRelationsMap(Class<E> enumClass) {
+        Map<T, Collection<R>> keyRelationsMap = new HashMap<>();
+
+        E[] enumConstants = Constants.Inner.getEnumValues(enumClass);
+
+        for (E constant : enumConstants) {
+            T key = constant.getConstant().getValue();
+
+            List<R> relations = Arrays.stream(constant.getConstant().getRelations())
+                    .map(Constant::getValue)
+                    .collect(Collectors.toList());
+
+            keyRelationsMap.put(key, relations);
+        }
+
+        return keyRelationsMap;
+    }
+
+    /**
+     * Get map of enum to relations of some enum constant container.
+     *
+     * @param enumClass enum constant container class
+     * @return map of enum-relations of enumClass parameter
+     */
+    public static <T, R, E extends Enum<E> & EnumRelationConstantContainer<T, R, E>> Map<E, Collection<R>> getEnumRelationsMap(Class<E> enumClass) {
+        Map<E, Collection<R>> keyRelationsMap = new HashMap<>();
+
+        E[] enumConstants = Constants.Inner.getEnumValues(enumClass);
+
+        for (E constant : enumConstants) {
+            List<R> relations = Arrays.stream(constant.getConstant().getRelations())
+                    .map(Constant::getValue)
+                    .collect(Collectors.toList());
+
+            keyRelationsMap.put(constant, relations);
+        }
+
+        return keyRelationsMap;
+    }
+
+    /**
      * Get constant container instance by class. Internally the instances are cached thus every next call will be instant.
      * <br><b>Note</b>: Anonymous and Enum classes are not supported.
      *
@@ -491,13 +555,13 @@ public final class Constants {
                     .collect(Collectors.toUnmodifiableList());
         }
 
-        private static void saveToCache(ConstantContainer<?> constantContainer) {
-            CONSTANTS_CACHE.putIfAbsent(constantContainer.getClass(), constantContainer);
-        }
-
         @SuppressWarnings("unchecked")
         static <E extends Enum<?> & EnumConstantContainer<?, ?>> E[] getEnumValues(@NonNull Class<E> enumClass) {
             return (E[]) ENUM_CONSTANTS_CACHE.computeIfAbsent(enumClass, Class::getEnumConstants);
+        }
+
+        private static void saveToCache(ConstantContainer<?> constantContainer) {
+            CONSTANTS_CACHE.putIfAbsent(constantContainer.getClass(), constantContainer);
         }
 
         @SuppressWarnings("unchecked")
